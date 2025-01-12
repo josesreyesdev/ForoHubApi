@@ -30,4 +30,4 @@ logging:
 # prevent the exception stack tracer
 server:
   error:
-    include-stacktrace: always
+    include-stacktrace: never
