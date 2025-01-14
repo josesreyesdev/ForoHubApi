@@ -3,6 +3,7 @@ package com.jsrdev.ForoHub.infrastructure.rest.controller;
 import com.jsrdev.ForoHub.domain.model.Course;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.CourseRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.CourseResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.UpdateCourse;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerCourseMapper;
 import com.jsrdev.ForoHub.usecase.course.CourseInteractor;
 import jakarta.transaction.Transactional;
@@ -77,5 +78,15 @@ public class CourseController {
         return ResponseEntity.ok(ControllerCourseMapper.fromCourseToCourseResponse(course));
     }
 
+    @PutMapping
+    @Transactional
+    public ResponseEntity<CourseResponse> update(@Valid @RequestBody UpdateCourse update) {
+        Course course = courseInteractor.findByCourseIdAndActiveTrue(update.courseId());
+        if (course == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found or inactive.");
+        }
 
+        Course updated = courseInteractor.update(course.update(course, update));
+        return ResponseEntity.ok(ControllerCourseMapper.fromCourseToCourseResponse(updated));
+    }
 }

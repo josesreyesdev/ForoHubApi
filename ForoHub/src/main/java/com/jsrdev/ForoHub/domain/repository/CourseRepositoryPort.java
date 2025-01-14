@@ -13,4 +13,6 @@ public interface CourseRepositoryPort {
     Course findByCourseId(String courseId);
 
     Course findByCourseIdAndActiveTrue(String courseId);
+
+    Course update(Course update);
 }

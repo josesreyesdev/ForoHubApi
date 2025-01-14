@@ -2,12 +2,13 @@ package com.jsrdev.ForoHub.domain.model;
 
 import com.jsrdev.ForoHub.common.CourseCategory;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.CourseRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.UpdateCourse;
 import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 
 //@Getter
 //@AllArgsConstructor
-@NoArgsConstructor(force = false)
+@NoArgsConstructor()
 public class Course {
     private String courseId;
     private String name;
@@ -26,6 +27,16 @@ public class Course {
         this.name = courseRequest.name();
         this.category = courseRequest.category();
         this.active = true;
+    }
+
+    public Course update(Course course, @Valid UpdateCourse update) {
+        if (update.name() != null) {
+            course.name = update.name();
+        }
+        if (update.category() != null) {
+            course.category = update.category();
+        }
+        return course;
     }
 
     public Boolean getActive() {

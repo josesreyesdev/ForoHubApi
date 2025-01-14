@@ -4,7 +4,6 @@ import com.jsrdev.ForoHub.common.CourseCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Table(name = "courses")
 @Entity(name = "Course")
@@ -23,13 +22,23 @@ public class CourseEntity {
     private CourseCategory category;
     private Boolean active;
 
-    public CourseEntity() {}
+    public CourseEntity() {
+    }
 
     public CourseEntity(String courseId, String name, CourseCategory category) {
         this.courseId = courseId;
         this.name = name;
         this.category = category;
         this.active = true;
+    }
+
+    public void update(String name, CourseCategory category) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (category != null) {
+            this.category = category;
+        }
     }
 
     public Boolean getActive() {
