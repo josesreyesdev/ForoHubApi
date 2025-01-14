@@ -2,7 +2,6 @@ package com.jsrdev.ForoHub.usecase.course;
 
 import com.jsrdev.ForoHub.domain.model.Course;
 import com.jsrdev.ForoHub.domain.repository.CourseRepositoryPort;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.UpdateCourse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
