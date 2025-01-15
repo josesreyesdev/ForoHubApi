@@ -1,10 +1,10 @@
 package com.jsrdev.ForoHub.infrastructure.rest.controller;
 
 import com.jsrdev.ForoHub.domain.model.Course;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.CourseRequest;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.CourseResponse;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.UpdateCourse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.DeleteResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.UpdateCourse;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerCourseMapper;
 import com.jsrdev.ForoHub.usecase.course.CourseInteractor;
 import jakarta.transaction.Transactional;

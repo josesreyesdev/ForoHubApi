@@ -1,7 +1,7 @@
 package com.jsrdev.ForoHub.infrastructure.rest.mapper;
 
 import com.jsrdev.ForoHub.domain.model.Course;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.CourseResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseResponse;
 
 public class ControllerCourseMapper {
 

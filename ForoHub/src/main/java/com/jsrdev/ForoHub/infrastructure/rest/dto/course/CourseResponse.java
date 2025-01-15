@@ -1,4 +1,4 @@
-package com.jsrdev.ForoHub.infrastructure.rest.dto;
+package com.jsrdev.ForoHub.infrastructure.rest.dto.course;
 
 import com.jsrdev.ForoHub.common.CourseCategory;
 
