@@ -3,6 +3,7 @@ package com.jsrdev.ForoHub.infrastructure.rest.controller;
 import com.jsrdev.ForoHub.domain.model.Course;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.CourseRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.CourseResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.UpdateCourse;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerCourseMapper;
 import com.jsrdev.ForoHub.usecase.course.CourseInteractor;
@@ -88,5 +89,22 @@ public class CourseController {
 
         Course updated = courseInteractor.update(course.update(course, update));
         return ResponseEntity.ok(ControllerCourseMapper.fromCourseToCourseResponse(updated));
+    }
+
+    @DeleteMapping("/{courseId}")
+    @Transactional
+    public ResponseEntity<DeleteResponse> delete(@PathVariable String courseId) {
+        Course course = courseInteractor.findByCourseIdAndActiveTrue(courseId);
+        if (course == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found or inactive.");
+        }
+
+        course.delete(course);
+        Boolean isDeleted = courseInteractor.delete(course.getCourseId());
+
+        String message = isDeleted ? "Course successfully deleted." : "Failed to delete course.";
+        DeleteResponse response = new DeleteResponse(isDeleted, message);
+
+        return ResponseEntity.ok(response);
     }
 }

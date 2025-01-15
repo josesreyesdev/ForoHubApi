@@ -60,4 +60,9 @@ public class CourseEntity {
     public String getName() {
         return name;
     }
+
+    public Boolean delete() {
+        this.active = false;
+        return true;
+    }
 }

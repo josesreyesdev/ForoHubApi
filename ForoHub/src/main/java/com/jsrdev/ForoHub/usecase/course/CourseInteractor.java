@@ -41,4 +41,9 @@ public class CourseInteractor implements ICourse {
         return courseRepositoryPort.update(update);
     }
 
+    @Override
+    public Boolean delete(String courseId) {
+        return courseRepositoryPort.delete(courseId);
+    }
+
 }

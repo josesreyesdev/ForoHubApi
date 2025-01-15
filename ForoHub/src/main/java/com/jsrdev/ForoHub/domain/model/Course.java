@@ -54,4 +54,9 @@ public class Course {
     public String getName() {
         return name;
     }
+
+    public Boolean delete(Course course) {
+        course.active = false;
+        return true;
+    }
 }

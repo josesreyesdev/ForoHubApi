@@ -70,4 +70,12 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
         courseEntity.update(update.getName(), update.getCategory());
         return CourseMapper.fromCourseEntityToCourse(courseEntity);
     }
+
+    @Override
+    public Boolean delete(String courseId) {
+        Optional<CourseEntity> optionalCourse = courseJpaRepository.findByCourseId(courseId);
+        if (optionalCourse.isEmpty()) { return false; }
+
+        return optionalCourse.get().delete();
+    }
 }

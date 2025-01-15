@@ -15,4 +15,6 @@ public interface ICourse {
     Course findByCourseIdAndActiveTrue(String courseId);
 
     Course update(Course update);
+
+    Boolean delete(String id);
 }
