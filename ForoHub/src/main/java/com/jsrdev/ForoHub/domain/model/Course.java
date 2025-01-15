@@ -55,8 +55,7 @@ public class Course {
         return name;
     }
 
-    public Boolean delete(Course course) {
+    public void delete(Course course) {
         course.active = false;
-        return true;
     }
 }
