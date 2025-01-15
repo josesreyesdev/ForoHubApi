@@ -10,6 +10,8 @@ public interface ICourse {
 
     Page<Course> findByActiveTrue(Pageable pagination);
 
+    Course findByCourseId(String courseId);
+
     Course findByCourseIdAndActiveTrue(String courseId);
 
     Course update(Course update);
