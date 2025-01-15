@@ -1,8 +1,8 @@
 package com.jsrdev.ForoHub.domain.model;
 
 import com.jsrdev.ForoHub.common.CourseCategory;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.CourseRequest;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.UpdateCourse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.UpdateCourse;
 import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 

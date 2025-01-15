@@ -1,4 +1,4 @@
-package com.jsrdev.ForoHub.infrastructure.rest.dto;
+package com.jsrdev.ForoHub.infrastructure.rest.dto.course;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
