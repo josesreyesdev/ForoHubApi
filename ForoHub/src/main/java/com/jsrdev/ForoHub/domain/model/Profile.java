@@ -11,8 +11,8 @@ public class Profile {
     private Boolean active;
 
     public Profile(@Valid ProfileRequest profileRequest) {
-        this.profileId = profileRequest.profileId().toUpperCase();
-        this.name = profileRequest.name();
+        this.profileId = profileRequest.profileId().toUpperCase().trim();
+        this.name = profileRequest.name().toUpperCase().trim();
         this.active = true;
     }
 
