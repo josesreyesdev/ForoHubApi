@@ -3,7 +3,7 @@ package com.jsrdev.ForoHub.infrastructure.rest.controller;
 import com.jsrdev.ForoHub.domain.model.Course;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseResponse;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.course.DeleteResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.course.UpdateCourse;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerCourseMapper;
 import com.jsrdev.ForoHub.usecase.course.CourseInteractor;
@@ -72,20 +72,15 @@ public class CourseController {
 
     @GetMapping("/{courseId}")
     public ResponseEntity<CourseResponse> getCourse(@PathVariable String courseId) {
-        Course course = courseInteractor.findByCourseIdAndActiveTrue(courseId);
-        if (course == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found or inactive.");
-        }
+        Course course = findByCourseIdAndActive(courseId);
+
         return ResponseEntity.ok(ControllerCourseMapper.fromCourseToCourseResponse(course));
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<CourseResponse> update(@Valid @RequestBody UpdateCourse update) {
-        Course course = courseInteractor.findByCourseIdAndActiveTrue(update.courseId());
-        if (course == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found or inactive.");
-        }
+        Course course = findByCourseIdAndActive(update.courseId());
 
         Course updated = courseInteractor.update(course.update(course, update));
         return ResponseEntity.ok(ControllerCourseMapper.fromCourseToCourseResponse(updated));
@@ -94,10 +89,7 @@ public class CourseController {
     @DeleteMapping("/{courseId}")
     @Transactional
     public ResponseEntity<DeleteResponse> delete(@PathVariable String courseId) {
-        Course course = courseInteractor.findByCourseIdAndActiveTrue(courseId);
-        if (course == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found or inactive.");
-        }
+        Course course = findByCourseIdAndActive(courseId);
 
         course.delete(course);
         Boolean isDeleted = courseInteractor.delete(course.getCourseId());
@@ -106,5 +98,13 @@ public class CourseController {
         DeleteResponse response = new DeleteResponse(isDeleted, message);
 
         return ResponseEntity.ok(response);
+    }
+
+    private Course findByCourseIdAndActive(String courseId) {
+        Course course = courseInteractor.findByCourseIdAndActiveTrue(courseId);
+        if (course == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found or inactive.");
+        }
+        return course;
     }
 }

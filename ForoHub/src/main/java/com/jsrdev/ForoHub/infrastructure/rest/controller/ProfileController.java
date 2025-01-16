@@ -72,21 +72,25 @@ public class ProfileController {
 
     @GetMapping("/{profileId}")
     public ResponseEntity<ProfileResponse> getProfile(@PathVariable String profileId) {
-        Profile profile = profileInteractor.findByProfileIdAndActiveTrue(profileId);
-        if (profile == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found or inactive.");
-        }
+        Profile profile = findByProfileIdAndActive(profileId);
+
         return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(profile));
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<ProfileResponse> update(@Valid @RequestBody UpdateProfile update) {
-        Profile profile = profileInteractor.findByProfileIdAndActiveTrue(update.profileId());
+        Profile profile = findByProfileIdAndActive(update.profileId());
+
+        Profile updated = profileInteractor.update(profile.update(profile, update));
+        return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(updated));
+    }
+
+    private Profile findByProfileIdAndActive(String profileId) {
+        Profile profile = profileInteractor.findByProfileIdAndActiveTrue(profileId);
         if (profile == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found or inactive.");
         }
-        Profile updated = profileInteractor.update(profile.update(profile, update));
-        return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(updated));
+        return profile;
     }
 }
