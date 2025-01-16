@@ -8,4 +8,6 @@ public interface ProfileRepositoryPort {
     Profile create(Profile profile);
 
     Page<Profile> findByActiveTrue(Pageable pagination);
+
+    Profile findByProfileIdAndActiveTrue(String profileId);
 }

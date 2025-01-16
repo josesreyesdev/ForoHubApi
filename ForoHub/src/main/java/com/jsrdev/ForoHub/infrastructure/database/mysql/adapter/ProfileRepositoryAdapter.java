@@ -45,4 +45,10 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
         );
     }
 
+    @Override
+    public Profile findByProfileIdAndActiveTrue(String profileId) {
+        return profileJpaRepository.findByProfileIdAndActiveTrue(profileId)
+                .map(ProfileMapper::fromProfileEntityToProfile).orElse(null);
+    }
+
 }

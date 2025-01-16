@@ -1,11 +1,8 @@
 package com.jsrdev.ForoHub.infrastructure.rest.controller;
 
-import com.jsrdev.ForoHub.domain.model.Course;
 import com.jsrdev.ForoHub.domain.model.Profile;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileResponse;
-import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerCourseMapper;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerProfileMapper;
 import com.jsrdev.ForoHub.usecase.profile.ProfileInteractor;
 import jakarta.transaction.Transactional;
@@ -17,8 +14,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -68,5 +67,14 @@ public class ProfileController {
         );
 
         return ResponseEntity.ok(assembler.toModel(profileResponsePage));
+    }
+
+    @GetMapping("/{profileId}")
+    public ResponseEntity<ProfileResponse> getProfile(@PathVariable String profileId) {
+        Profile profile = profileInteractor.findByProfileIdAndActiveTrue(profileId);
+        if (profile == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found or inactive.");
+        }
+        return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(profile));
     }
 }

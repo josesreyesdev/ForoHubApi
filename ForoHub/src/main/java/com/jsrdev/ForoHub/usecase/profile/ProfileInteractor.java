@@ -24,4 +24,9 @@ public class ProfileInteractor implements IProfile {
     public Page<Profile> findByActiveTrue(Pageable pagination) {
         return profileRepositoryPort.findByActiveTrue(pagination);
     }
+
+    @Override
+    public Profile findByProfileIdAndActiveTrue(String profileId) {
+        return profileRepositoryPort.findByProfileIdAndActiveTrue(profileId);
+    }
 }
