@@ -12,4 +12,6 @@ public interface ProfileJpaRepository extends JpaRepository<ProfileEntity, Long>
     Page<ProfileEntity> findByActiveTrue(Pageable pagination);
 
     Optional<ProfileEntity> findByProfileIdAndActiveTrue(String profileId);
+
+    Optional<ProfileEntity> findByProfileId(String profileId);
 }

@@ -10,4 +10,6 @@ public interface IProfile {
     Page<Profile> findByActiveTrue(Pageable pagination);
 
     Profile findByProfileIdAndActiveTrue(String profileId);
+
+    Profile update(Profile update);
 }

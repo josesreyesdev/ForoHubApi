@@ -1,8 +1,10 @@
 package com.jsrdev.ForoHub.infrastructure.rest.controller;
 
+import com.jsrdev.ForoHub.domain.model.Course;
 import com.jsrdev.ForoHub.domain.model.Profile;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.UpdateProfile;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerProfileMapper;
 import com.jsrdev.ForoHub.usecase.profile.ProfileInteractor;
 import jakarta.transaction.Transactional;
@@ -75,6 +77,17 @@ public class ProfileController {
         if (profile == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found or inactive.");
         }
+        return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(profile));
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity<ProfileResponse> update(@Valid @RequestBody UpdateProfile update) {
+        Profile profile = profileInteractor.findByProfileIdAndActiveTrue(update.profileId());
+        if (profile == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found or inactive.");
+        }
+        Profile updated = profileInteractor.update(profile.update(profile, update));
         return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(profile));
     }
 }

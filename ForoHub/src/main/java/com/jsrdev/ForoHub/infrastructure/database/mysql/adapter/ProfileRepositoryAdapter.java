@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
@@ -49,6 +50,20 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
     public Profile findByProfileIdAndActiveTrue(String profileId) {
         return profileJpaRepository.findByProfileIdAndActiveTrue(profileId)
                 .map(ProfileMapper::fromProfileEntityToProfile).orElse(null);
+    }
+
+    @Override
+    public Profile update(Profile update) {
+        Optional<ProfileEntity> optionalProfile = profileJpaRepository
+                .findByProfileId(update.getProfileId());
+
+        if (optionalProfile.isEmpty()) {
+            return null;
+        }
+
+        ProfileEntity profileEntity = optionalProfile.get();
+        profileEntity.update(update.getName());
+        return ProfileMapper.fromProfileEntityToProfile(profileEntity);
     }
 
 }

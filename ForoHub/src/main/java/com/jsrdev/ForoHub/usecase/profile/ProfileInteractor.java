@@ -29,4 +29,9 @@ public class ProfileInteractor implements IProfile {
     public Profile findByProfileIdAndActiveTrue(String profileId) {
         return profileRepositoryPort.findByProfileIdAndActiveTrue(profileId);
     }
+
+    @Override
+    public Profile update(Profile update) {
+        return profileRepositoryPort.update(update);
+    }
 }

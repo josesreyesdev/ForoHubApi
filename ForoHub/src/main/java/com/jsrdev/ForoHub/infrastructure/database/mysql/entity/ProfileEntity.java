@@ -22,6 +22,12 @@ public class ProfileEntity {
         this.active = active;
     }
 
+    public void update(String name) {
+        if (name != null) {
+            this.name = name;
+        }
+    }
+
     public Boolean getActive() {
         return active;
     }

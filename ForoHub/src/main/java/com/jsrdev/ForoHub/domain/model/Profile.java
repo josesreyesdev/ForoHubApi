@@ -1,6 +1,7 @@
 package com.jsrdev.ForoHub.domain.model;
 
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.UpdateProfile;
 import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 
@@ -32,5 +33,12 @@ public class Profile {
 
     public String getProfileId() {
         return profileId;
+    }
+
+    public Profile update(Profile profile, @Valid UpdateProfile update) {
+        if (update.name() != null) {
+            profile.name = update.name().trim().toUpperCase();
+        }
+        return profile;
     }
 }
