@@ -66,4 +66,12 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
         return ProfileMapper.fromProfileEntityToProfile(profileEntity);
     }
 
+    @Override
+    public Boolean delete(String profileId) {
+        Optional<ProfileEntity> optionalProfile = profileJpaRepository.findByProfileId(profileId);
+        if (optionalProfile.isEmpty()) { return false; }
+
+        return optionalProfile.get().delete();
+    }
+
 }

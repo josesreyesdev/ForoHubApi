@@ -43,4 +43,9 @@ public class ProfileEntity {
     public String getProfileId() {
         return profileId;
     }
+
+    public Boolean delete() {
+        this.active = false;
+        return true;
+    }
 }

@@ -34,4 +34,9 @@ public class ProfileInteractor implements IProfile {
     public Profile update(Profile update) {
         return profileRepositoryPort.update(update);
     }
+
+    @Override
+    public Boolean delete(String profileId) {
+        return profileRepositoryPort.delete(profileId);
+    }
 }

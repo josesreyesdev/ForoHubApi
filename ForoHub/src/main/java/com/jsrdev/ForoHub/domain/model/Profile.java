@@ -41,4 +41,8 @@ public class Profile {
         }
         return profile;
     }
+
+    public void delete(Profile profile) {
+        profile.active = false;
+    }
 }

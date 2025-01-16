@@ -12,4 +12,6 @@ public interface ProfileRepositoryPort {
     Profile findByProfileIdAndActiveTrue(String profileId);
 
     Profile update(Profile update);
+
+    Boolean delete(String profileId);
 }

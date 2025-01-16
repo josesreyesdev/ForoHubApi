@@ -1,6 +1,7 @@
 package com.jsrdev.ForoHub.infrastructure.rest.controller;
 
 import com.jsrdev.ForoHub.domain.model.Profile;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.UpdateProfile;
@@ -84,6 +85,20 @@ public class ProfileController {
 
         Profile updated = profileInteractor.update(profile.update(profile, update));
         return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(updated));
+    }
+
+    @DeleteMapping("/{profileId}")
+    @Transactional
+    public ResponseEntity<DeleteResponse> delete(@PathVariable String profileId) {
+        Profile profile = findByProfileIdAndActive(profileId);
+
+        profile.delete(profile);
+        Boolean isDeleted = profileInteractor.delete(profile.getProfileId());
+
+        String message = isDeleted ? "Profile successfully deleted." : "Failed to delete profile.";
+        DeleteResponse response = new DeleteResponse(isDeleted, message);
+
+        return ResponseEntity.ok(response);
     }
 
     private Profile findByProfileIdAndActive(String profileId) {

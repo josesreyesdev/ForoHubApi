@@ -12,4 +12,6 @@ public interface IProfile {
     Profile findByProfileIdAndActiveTrue(String profileId);
 
     Profile update(Profile update);
+
+    Boolean delete(String profileId);
 }
