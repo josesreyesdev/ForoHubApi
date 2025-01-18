@@ -31,13 +31,9 @@ public class UserMapper {
                 userRequest.userId(),
                 userRequest.name(),
                 userRequest.email(),
-                passwordEncoder(userRequest.password()),
+                userRequest.password(),
                 profiles,
                 true
         );
-    }
-
-    public static String passwordEncoder(String password) {
-        return password; //new PasswordEncoder().encode(password);
     }
 }

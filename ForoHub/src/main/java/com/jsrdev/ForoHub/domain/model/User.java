@@ -25,7 +25,7 @@ public class User {
         this.userId = userId;
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.password = passwordEncoder(password);
         this.profiles = profiles != null ? profiles : new ArrayList<>();
         this.active = active;
     }
@@ -52,5 +52,9 @@ public class User {
 
     public String getUserId() {
         return userId;
+    }
+
+    private String passwordEncoder(String password) {
+        return password; //new PasswordEncoder().encode(password);
     }
 }

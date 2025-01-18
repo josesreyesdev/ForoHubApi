@@ -3,7 +3,7 @@ package com.jsrdev.ForoHub.infrastructure.database.mysql.adapter;
 import com.jsrdev.ForoHub.domain.model.Profile;
 import com.jsrdev.ForoHub.domain.repository.ProfileRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.ProfileEntity;
-import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.ProfileMapper;
+import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.ProfileEntityMapper;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.ProfileJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,8 +25,8 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
     @Override
     public Profile create(Profile profile) {
         ProfileEntity profileEntity = profileJpaRepository
-                .save(ProfileMapper.fromProfileToProfileEntity(profile));
-        return ProfileMapper.fromProfileEntityToProfile(profileEntity);
+                .save(ProfileEntityMapper.toEntity(profile));
+        return ProfileEntityMapper.toModel(profileEntity);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
         List<Profile> profiles = profileEntityPage
                 .getContent()
                 .stream()
-                .map(ProfileMapper::fromProfileEntityToProfile)
+                .map(ProfileEntityMapper::toModel)
                 .toList();
 
         return new PageImpl<>(
@@ -49,7 +49,7 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
     @Override
     public Profile findByProfileIdAndActiveTrue(String profileId) {
         return profileJpaRepository.findByProfileIdAndActiveTrue(profileId)
-                .map(ProfileMapper::fromProfileEntityToProfile).orElse(null);
+                .map(ProfileEntityMapper::toModel).orElse(null);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
 
         ProfileEntity profileEntity = optionalProfile.get();
         profileEntity.update(update.getName());
-        return ProfileMapper.fromProfileEntityToProfile(profileEntity);
+        return ProfileEntityMapper.toModel(profileEntity);
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.UpdateProfile;
-import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerProfileMapper;
+import com.jsrdev.ForoHub.infrastructure.rest.mapper.ProfileMapper;
 import com.jsrdev.ForoHub.usecase.profile.ProfileInteractor;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -46,7 +46,7 @@ public class ProfileController {
                 .buildAndExpand(profile.getProfileId()).toUri();
 
         return ResponseEntity.created(uri)
-                .body(ControllerProfileMapper.fromProfileToProfileResponse(profile));
+                .body(ProfileMapper.toResponse(profile));
     }
 
     @GetMapping
@@ -59,7 +59,7 @@ public class ProfileController {
         List<ProfileResponse> profileResponse = profilesPage
                 .getContent()
                 .stream()
-                .map(ControllerProfileMapper::fromProfileToProfileResponse)
+                .map(ProfileMapper::toResponse)
                 .toList();
 
         Page<ProfileResponse> profileResponsePage = new PageImpl<>(
@@ -75,7 +75,7 @@ public class ProfileController {
     public ResponseEntity<ProfileResponse> getProfile(@PathVariable String profileId) {
         Profile profile = findByProfileIdAndActive(profileId);
 
-        return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(profile));
+        return ResponseEntity.ok(ProfileMapper.toResponse(profile));
     }
 
     @PutMapping
@@ -84,7 +84,7 @@ public class ProfileController {
         Profile profile = findByProfileIdAndActive(update.profileId());
 
         Profile updated = profileInteractor.update(profile.update(profile, update));
-        return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(updated));
+        return ResponseEntity.ok(ProfileMapper.toResponse(updated));
     }
 
     @DeleteMapping("/{profileId}")

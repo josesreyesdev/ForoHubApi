@@ -5,7 +5,7 @@ import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.course.UpdateCourse;
-import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerCourseMapper;
+import com.jsrdev.ForoHub.infrastructure.rest.mapper.CourseMapper;
 import com.jsrdev.ForoHub.usecase.course.CourseInteractor;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -45,7 +45,7 @@ public class CourseController {
         Course course = courseInteractor.save(new Course(courseRequest));
         URI uri = uriComponentsBuilder.path("/api/courses/{id}").buildAndExpand(course.getCourseId()).toUri();
 
-        return ResponseEntity.created(uri).body(ControllerCourseMapper.fromCourseToCourseResponse(course));
+        return ResponseEntity.created(uri).body(CourseMapper.toResponse(course));
     }
 
     @GetMapping
@@ -58,7 +58,7 @@ public class CourseController {
         List<CourseResponse> courseResponses = coursesPage
                 .getContent()
                 .stream()
-                .map(ControllerCourseMapper::fromCourseToCourseResponse)
+                .map(CourseMapper::toResponse)
                 .toList();
 
         Page<CourseResponse> courseResponsePage = new PageImpl<>(
@@ -74,7 +74,7 @@ public class CourseController {
     public ResponseEntity<CourseResponse> getCourse(@PathVariable String courseId) {
         Course course = findByCourseIdAndActive(courseId);
 
-        return ResponseEntity.ok(ControllerCourseMapper.fromCourseToCourseResponse(course));
+        return ResponseEntity.ok(CourseMapper.toResponse(course));
     }
 
     @PutMapping
@@ -83,7 +83,7 @@ public class CourseController {
         Course course = findByCourseIdAndActive(update.courseId());
 
         Course updated = courseInteractor.update(course.update(course, update));
-        return ResponseEntity.ok(ControllerCourseMapper.fromCourseToCourseResponse(updated));
+        return ResponseEntity.ok(CourseMapper.toResponse(updated));
     }
 
     @DeleteMapping("/{courseId}")

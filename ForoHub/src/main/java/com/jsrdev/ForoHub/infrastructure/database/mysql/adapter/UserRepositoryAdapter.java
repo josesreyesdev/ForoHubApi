@@ -5,7 +5,7 @@ import com.jsrdev.ForoHub.domain.model.User;
 import com.jsrdev.ForoHub.domain.repository.UserRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.ProfileEntity;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.UserEntity;
-import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.ProfileMapper;
+import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.ProfileEntityMapper;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.UserEntityMapper;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.ProfileJpaRepository;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.UserJpaRepository;
@@ -37,7 +37,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         UserEntity savedUserEntity = userJpaRepository.save(userEntity);
 
         List<Profile> savedProfiles = savedUserEntity.getProfiles().stream()
-                .map(ProfileMapper::fromProfileEntityToProfile)
+                .map(ProfileEntityMapper::toModel)
                 .toList();
 
         return UserEntityMapper.toModel(savedUserEntity, savedProfiles);
@@ -48,7 +48,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         return profileIds.stream()
                 .map(profileId -> profileJpaRepository.findByProfileId(profileId)
                         .orElseThrow(() -> new ProfileNotFoundException("Profile not found: " + profileId)))
-                .map(ProfileMapper::fromProfileEntityToProfile)
+                .map(ProfileEntityMapper::toModel)
                 .toList();
     }
 

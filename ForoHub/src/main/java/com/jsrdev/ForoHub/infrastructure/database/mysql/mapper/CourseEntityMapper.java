@@ -3,13 +3,17 @@ package com.jsrdev.ForoHub.infrastructure.database.mysql.mapper;
 import com.jsrdev.ForoHub.domain.model.Course;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.CourseEntity;
 
-public class CourseMapper {
+public class CourseEntityMapper {
 
-    public static CourseEntity fromCourseToCourseEntity(Course course) {
-        return new CourseEntity(course.getCourseId(), course.getName(), course.getCategory());
+    public static CourseEntity toEntity(Course course) {
+        return new CourseEntity(
+                course.getCourseId(),
+                course.getName(),
+                course.getCategory()
+        );
     }
 
-    public static Course fromCourseEntityToCourse(CourseEntity courseEntity) {
+    public static Course toModel(CourseEntity courseEntity) {
         return new Course(
                 courseEntity.getActive(),
                 courseEntity.getCategory(),
