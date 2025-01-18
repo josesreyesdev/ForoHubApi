@@ -1,0 +1,56 @@
+package com.jsrdev.ForoHub.domain.model;
+
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@NoArgsConstructor
+public class User {
+    private String userId;
+    private String name;
+    private String email;
+    private String password;
+    private Boolean active;
+    private List<Profile> profiles = new ArrayList<>();
+
+    public User(
+            String userId,
+            String name,
+            String email,
+            String password,
+            List<Profile> profiles,
+            boolean active
+    ) {
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.profiles = profiles != null ? profiles : new ArrayList<>();
+        this.active = active;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public List<Profile> getProfiles() {
+        return profiles;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+}
