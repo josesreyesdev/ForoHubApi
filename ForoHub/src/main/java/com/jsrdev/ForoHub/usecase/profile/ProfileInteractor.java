@@ -2,6 +2,8 @@ package com.jsrdev.ForoHub.usecase.profile;
 
 import com.jsrdev.ForoHub.domain.model.Profile;
 import com.jsrdev.ForoHub.domain.repository.ProfileRepositoryPort;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.mapper.ProfileMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -16,7 +18,8 @@ public class ProfileInteractor implements IProfile {
     }
 
     @Override
-    public Profile create(Profile profile) {
+    public Profile create(ProfileRequest profileRequest) {
+        Profile profile = ProfileMapper.toModel(profileRequest);
         return profileRepositoryPort.create(profile);
     }
 

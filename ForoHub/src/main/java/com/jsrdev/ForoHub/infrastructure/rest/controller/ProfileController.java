@@ -41,7 +41,8 @@ public class ProfileController {
             @Valid @RequestBody ProfileRequest profileRequest,
             UriComponentsBuilder uriComponentsBuilder
     ) {
-        Profile profile = profileInteractor.create(new Profile(profileRequest));
+        Profile profile = profileInteractor.create(profileRequest);
+
         URI uri = uriComponentsBuilder.path("/api/profiles/{id}")
                 .buildAndExpand(profile.getProfileId()).toUri();
 

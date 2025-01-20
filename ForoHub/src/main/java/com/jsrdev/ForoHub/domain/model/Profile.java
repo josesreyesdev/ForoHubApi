@@ -1,6 +1,5 @@
 package com.jsrdev.ForoHub.domain.model;
 
-import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.UpdateProfile;
 import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
@@ -11,15 +10,9 @@ public class Profile {
     private String name;
     private Boolean active;
 
-    public Profile(@Valid ProfileRequest profileRequest) {
-        this.profileId = profileRequest.profileId().toUpperCase().trim();
-        this.name = profileRequest.name().toUpperCase().trim();
-        this.active = true;
-    }
-
     public Profile(String profileId, String name, Boolean isActive) {
-        this.profileId = profileId;
-        this.name = name;
+        this.profileId = profileId.toUpperCase().trim();
+        this.name = name.toUpperCase().trim();
         this.active = isActive;
     }
 
