@@ -31,7 +31,8 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
 
     @Override
     public Page<Profile> findByActiveTrue(Pageable pagination) {
-        Page<ProfileEntity> profileEntityPage = profileJpaRepository.findByActiveTrue(pagination);
+        Page<ProfileEntity> profileEntityPage = profileJpaRepository
+                .findByActiveTrue(pagination);
 
         List<Profile> profiles = profileEntityPage
                 .getContent()
@@ -54,24 +55,27 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
 
     @Override
     public Profile update(Profile update) {
-        Optional<ProfileEntity> optionalProfile = profileJpaRepository
+        Optional<ProfileEntity> optionalProfileEntity = profileJpaRepository
                 .findByProfileId(update.getProfileId());
 
-        if (optionalProfile.isEmpty()) {
+        if (optionalProfileEntity.isEmpty()) {
             return null;
         }
 
-        ProfileEntity profileEntity = optionalProfile.get();
+        ProfileEntity profileEntity = optionalProfileEntity.get();
         profileEntity.update(update.getName());
+
         return ProfileEntityMapper.toModel(profileEntity);
     }
 
     @Override
     public Boolean delete(String profileId) {
-        Optional<ProfileEntity> optionalProfile = profileJpaRepository.findByProfileId(profileId);
-        if (optionalProfile.isEmpty()) { return false; }
+        Optional<ProfileEntity> optionalProfileEntity = profileJpaRepository.findByProfileId(profileId);
+        if (optionalProfileEntity.isEmpty()) {
+            return false;
+        }
 
-        return optionalProfile.get().delete();
+        return optionalProfileEntity.get().delete();
     }
 
 }

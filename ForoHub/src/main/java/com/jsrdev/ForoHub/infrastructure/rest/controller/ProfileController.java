@@ -42,7 +42,6 @@ public class ProfileController {
             UriComponentsBuilder uriComponentsBuilder
     ) {
         Profile profile = profileInteractor.create(profileRequest);
-
         URI uri = uriComponentsBuilder.path("/api/profiles/{id}")
                 .buildAndExpand(profile.getProfileId()).toUri();
 
@@ -84,7 +83,7 @@ public class ProfileController {
     public ResponseEntity<ProfileResponse> update(@Valid @RequestBody UpdateProfile update) {
         Profile profile = findByProfileIdAndActive(update.profileId());
 
-        Profile updated = profileInteractor.update(profile.update(profile, update));
+        Profile updated = profileInteractor.update(profile, update);
         return ResponseEntity.ok(ProfileMapper.toResponse(updated));
     }
 
@@ -93,8 +92,7 @@ public class ProfileController {
     public ResponseEntity<DeleteResponse> delete(@PathVariable String profileId) {
         Profile profile = findByProfileIdAndActive(profileId);
 
-        profile.delete(profile);
-        Boolean isDeleted = profileInteractor.delete(profile.getProfileId());
+        Boolean isDeleted = profileInteractor.delete(profile);
 
         String message = isDeleted ? "Profile successfully deleted." : "Failed to delete profile.";
         DeleteResponse response = new DeleteResponse(isDeleted, message);

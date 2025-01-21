@@ -3,6 +3,7 @@ package com.jsrdev.ForoHub.usecase.profile;
 import com.jsrdev.ForoHub.domain.model.Profile;
 import com.jsrdev.ForoHub.domain.repository.ProfileRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.UpdateProfile;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ProfileMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,12 +35,14 @@ public class ProfileInteractor implements IProfile {
     }
 
     @Override
-    public Profile update(Profile update) {
-        return profileRepositoryPort.update(update);
+    public Profile update(Profile profile, UpdateProfile update) {
+        profile.update(profile, update.name());
+        return profileRepositoryPort.update(profile);
     }
 
     @Override
-    public Boolean delete(String profileId) {
-        return profileRepositoryPort.delete(profileId);
+    public Boolean delete(Profile profile) {
+        profile.delete(profile);
+        return profileRepositoryPort.delete(profile.getProfileId());
     }
 }
