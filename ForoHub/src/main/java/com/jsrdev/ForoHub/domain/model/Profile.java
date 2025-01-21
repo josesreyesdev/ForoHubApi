@@ -1,6 +1,5 @@
 package com.jsrdev.ForoHub.domain.model;
 
-import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.UpdateProfile;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor()
