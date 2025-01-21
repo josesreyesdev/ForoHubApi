@@ -8,10 +8,10 @@ public class Profile {
     private String name;
     private Boolean active;
 
-    public Profile(String profileId, String name, Boolean isActive) {
+    public Profile(String profileId, String name) {
         this.profileId = profileId.toUpperCase().trim();
         this.name = name.toUpperCase().trim();
-        this.active = isActive;
+        this.active = true;
     }
 
     public Boolean getActive() {

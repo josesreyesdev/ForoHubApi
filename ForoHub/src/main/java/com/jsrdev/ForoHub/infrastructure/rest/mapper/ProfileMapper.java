@@ -15,8 +15,7 @@ public class ProfileMapper {
     public static Profile toModel(ProfileRequest profileRequest) {
         return new Profile(
                 profileRequest.profileId(),
-                profileRequest.name(),
-                true
+                profileRequest.name()
         );
     }
 }
