@@ -42,7 +42,8 @@ public class CourseController {
             @Valid @RequestBody CourseRequest courseRequest,
             UriComponentsBuilder uriComponentsBuilder
     ) {
-        Course course = courseInteractor.save(new Course(courseRequest));
+        Course course = courseInteractor.save(courseRequest);
+
         URI uri = uriComponentsBuilder.path("/api/courses/{id}").buildAndExpand(course.getCourseId()).toUri();
 
         return ResponseEntity.created(uri).body(CourseMapper.toResponse(course));
@@ -82,7 +83,8 @@ public class CourseController {
     public ResponseEntity<CourseResponse> update(@Valid @RequestBody UpdateCourse update) {
         Course course = findByCourseIdAndActive(update.courseId());
 
-        Course updated = courseInteractor.update(course.update(course, update));
+        Course updated = courseInteractor.update(course, update);
+
         return ResponseEntity.ok(CourseMapper.toResponse(updated));
     }
 
@@ -91,8 +93,7 @@ public class CourseController {
     public ResponseEntity<DeleteResponse> delete(@PathVariable String courseId) {
         Course course = findByCourseIdAndActive(courseId);
 
-        course.delete(course);
-        Boolean isDeleted = courseInteractor.delete(course.getCourseId());
+        Boolean isDeleted = courseInteractor.delete(course);
 
         String message = isDeleted ? "Course successfully deleted." : "Failed to delete course.";
         DeleteResponse response = new DeleteResponse(isDeleted, message);

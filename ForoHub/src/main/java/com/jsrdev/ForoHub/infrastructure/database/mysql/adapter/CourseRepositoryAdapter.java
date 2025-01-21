@@ -62,12 +62,14 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
 
     @Override
     public Course update(Course update) {
-        Optional<CourseEntity> optionalCourse = courseJpaRepository.findByCourseId(update.getCourseId());
+        Optional<CourseEntity> optionalCourse = courseJpaRepository
+                .findByCourseId(update.getCourseId());
 
         if (optionalCourse.isEmpty()) { return null; }
 
         CourseEntity courseEntity = optionalCourse.get();
         courseEntity.update(update.getName(), update.getCategory());
+
         return CourseEntityMapper.toModel(courseEntity);
     }
 

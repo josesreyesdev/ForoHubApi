@@ -15,10 +15,9 @@ public class CourseEntityMapper {
 
     public static Course toModel(CourseEntity courseEntity) {
         return new Course(
-                courseEntity.getActive(),
-                courseEntity.getCategory(),
                 courseEntity.getCourseId(),
-                courseEntity.getName()
+                courseEntity.getName(),
+                courseEntity.getCategory()
         );
     }
 }
