@@ -10,9 +10,14 @@ import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.UserEntityMapper;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.ProfileJpaRepository;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.UserJpaRepository;
 import com.jsrdev.ForoHub.infrastructure.exceptions.ProfileNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class UserRepositoryAdapter implements UserRepositoryPort {
@@ -27,10 +32,20 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public User createUserWithProfiles(User user) {
+        List<String> invalidProfileIds = new ArrayList<>();
+
         List<ProfileEntity> profileEntities = user.getProfiles().stream()
                 .map(profile -> profileJpaRepository.findByProfileId(profile.getProfileId())
-                        .orElseThrow(() -> new ProfileNotFoundException("Profile not found: " + profile.getProfileId())))
+                        .orElseGet(() -> {
+                            invalidProfileIds.add(profile.getProfileId());
+                            return null;
+                        }))
+                .filter(Objects::nonNull) // Filter valid profiles
                 .toList();
+
+        if (!invalidProfileIds.isEmpty()) {
+            throw new ProfileNotFoundException("Profiles not found or inactive: " + String.join(", ", invalidProfileIds));
+        }
 
         UserEntity userEntity = UserEntityMapper.toEntity(user, profileEntities);
 
@@ -45,11 +60,44 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public List<Profile> validateAndFindProfiles(List<String> profileIds) {
-        return profileIds.stream()
-                .map(profileId -> profileJpaRepository.findByProfileId(profileId)
-                        .orElseThrow(() -> new ProfileNotFoundException("Profile not found: " + profileId)))
+        List<String> invalidProfileIds = new ArrayList<>();
+
+        List<Profile> profiles = profileIds.stream()
+                .map(profileId -> profileJpaRepository.findByProfileIdAndActiveTrue(profileId)
+                        .orElseGet(() -> {
+                            invalidProfileIds.add(profileId);
+                            return null;
+                        }))
+                .filter(Objects::nonNull) // Filter valid profiles
                 .map(ProfileEntityMapper::toModel)
                 .toList();
+
+        if (!invalidProfileIds.isEmpty()) {
+            throw new ProfileNotFoundException("Profiles not found or inactive: " + String.join(", ", invalidProfileIds));
+        }
+
+        return profiles;
     }
 
+    @Override
+    public Page<User> findByActiveTrueWithProfiles(Pageable pagination) {
+        Page<UserEntity> userEntityPage = userJpaRepository
+                .findByActiveTrueWithProfiles(pagination);
+
+        List<User> users = userEntityPage.getContent().stream()
+                .map(u -> {
+                    List<Profile> profiles = u.getProfiles().stream()
+                            .map(ProfileEntityMapper::toModel)
+                            .toList();
+
+                    return UserEntityMapper.toModel(u, profiles);
+                })
+                .toList();
+
+        return new PageImpl<>(
+                users,
+                pagination,
+                userEntityPage.getTotalElements()
+        );
+    }
 }

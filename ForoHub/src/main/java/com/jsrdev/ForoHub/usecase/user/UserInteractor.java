@@ -5,6 +5,8 @@ import com.jsrdev.ForoHub.domain.model.User;
 import com.jsrdev.ForoHub.domain.repository.UserRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.user.UserRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.UserMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,5 +28,10 @@ public class UserInteractor implements IUser {
         User user = UserMapper.toModel(userRequest, profiles);
 
         return userRepositoryPort.createUserWithProfiles(user);
+    }
+
+    @Override
+    public Page<User> findByActiveTrueWithProfiles(Pageable pagination) {
+        return userRepositoryPort.findByActiveTrueWithProfiles(pagination);
     }
 }

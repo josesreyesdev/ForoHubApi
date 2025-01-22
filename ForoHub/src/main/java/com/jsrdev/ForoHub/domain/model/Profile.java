@@ -14,6 +14,12 @@ public class Profile {
         this.active = true;
     }
 
+    public Profile(String profileId, String name, Boolean isActive) {
+        this.profileId = profileId.toUpperCase().trim();
+        this.name = name.toUpperCase().trim();
+        this.active = isActive;
+    }
+
     public Boolean getActive() {
         return active;
     }
