@@ -55,14 +55,7 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
 
     @Override
     public Profile update(Profile update) {
-        Optional<ProfileEntity> optionalProfileEntity = profileJpaRepository
-                .findByProfileId(update.getProfileId());
-
-        if (optionalProfileEntity.isEmpty()) {
-            return null;
-        }
-
-        ProfileEntity profileEntity = optionalProfileEntity.get();
+        ProfileEntity profileEntity = findByProfileId(update.getProfileId());
         profileEntity.update(update.getName());
 
         return ProfileEntityMapper.toModel(profileEntity);
@@ -70,12 +63,14 @@ public class ProfileRepositoryAdapter implements ProfileRepositoryPort {
 
     @Override
     public Boolean delete(String profileId) {
-        Optional<ProfileEntity> optionalProfileEntity = profileJpaRepository.findByProfileId(profileId);
-        if (optionalProfileEntity.isEmpty()) {
-            return false;
-        }
-
-        return optionalProfileEntity.get().delete();
+        ProfileEntity profileEntity = findByProfileId(profileId);
+        return profileEntity.delete();
     }
 
+    private ProfileEntity findByProfileId(String profileId) {
+        Optional<ProfileEntity> optionalProfileEntity = profileJpaRepository
+                .findByProfileId(profileId);
+
+        return optionalProfileEntity.orElse(null);
+    }
 }

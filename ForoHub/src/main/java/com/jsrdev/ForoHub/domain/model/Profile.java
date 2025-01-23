@@ -32,11 +32,11 @@ public class Profile {
         return profileId;
     }
 
-    public Profile update(Profile profile, String name) {
+    public Profile update(String name) {
         if (name != null) {
-            profile.name = name.trim().toUpperCase();
+            this.name = name.trim().toUpperCase();
         }
-        return profile;
+        return this;
     }
 
     public void delete(Profile profile) {

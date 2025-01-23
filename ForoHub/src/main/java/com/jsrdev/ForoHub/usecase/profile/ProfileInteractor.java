@@ -36,7 +36,7 @@ public class ProfileInteractor implements IProfile {
 
     @Override
     public Profile update(Profile profile, UpdateProfile update) {
-        profile.update(profile, update.name());
+        profile.update(update.name());
         return profileRepositoryPort.update(profile);
     }
 
