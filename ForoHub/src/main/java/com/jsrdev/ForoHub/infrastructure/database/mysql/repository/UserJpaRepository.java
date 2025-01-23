@@ -6,9 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
     Page<UserEntity> findByActiveTrue(Pageable pagination);
 
     @Query("SELECT u FROM User u JOIN FETCH u.profiles WHERE u.active = true")
     Page<UserEntity> findByActiveTrueWithProfiles(Pageable pagination);
+
+    @Query("SELECT u FROM User u JOIN FETCH u.profiles WHERE u.userId = :userId AND u.active = true")
+    Optional<UserEntity> findByUserIdAndActiveTrueWithProfiles(String userId);
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class UserRepositoryAdapter implements UserRepositoryPort {
@@ -51,11 +52,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
         UserEntity savedUserEntity = userJpaRepository.save(userEntity);
 
-        List<Profile> savedProfiles = savedUserEntity.getProfiles().stream()
-                .map(ProfileEntityMapper::toModel)
-                .toList();
-
-        return UserEntityMapper.toModel(savedUserEntity, savedProfiles);
+        return UserEntityMapper.toModel(savedUserEntity);
     }
 
     @Override
@@ -73,7 +70,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
                 .toList();
 
         if (!invalidProfileIds.isEmpty()) {
-            throw new ProfileNotFoundException("Profiles not found or inactive: " + String.join(", ", invalidProfileIds));
+            throw new ProfileNotFoundException("Profile(s) not found or inactive: " + String.join(", ", invalidProfileIds));
         }
 
         return profiles;
@@ -85,13 +82,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
                 .findByActiveTrueWithProfiles(pagination);
 
         List<User> users = userEntityPage.getContent().stream()
-                .map(u -> {
-                    List<Profile> profiles = u.getProfiles().stream()
-                            .map(ProfileEntityMapper::toModel)
-                            .toList();
-
-                    return UserEntityMapper.toModel(u, profiles);
-                })
+                .map(UserEntityMapper::toModel)
                 .toList();
 
         return new PageImpl<>(
@@ -99,5 +90,16 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
                 pagination,
                 userEntityPage.getTotalElements()
         );
+    }
+
+    @Override
+    public User findByUserIdAndActiveTrue(String userId) {
+        Optional<UserEntity> optionalUserEntity = userJpaRepository
+                .findByUserIdAndActiveTrueWithProfiles(userId);
+        if (optionalUserEntity.isEmpty()) {
+            throw new ProfileNotFoundException("Profile not found or inactive");
+        }
+
+        return UserEntityMapper.toModel(optionalUserEntity.get());
     }
 }

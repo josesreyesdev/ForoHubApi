@@ -14,8 +14,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -65,5 +67,21 @@ public class UserController {
         );
 
         return ResponseEntity.ok(assembler.toModel(userResponsePage));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable String userId) {
+        User user = findByUserIdAndActiveTrue(userId);
+
+        return ResponseEntity.ok(UserMapper.toResponse(user));
+    }
+
+    private User findByUserIdAndActiveTrue(String userId) {
+        User user = userInteractor.findByUserIdAndActiveTrue(userId);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or inactive.");
+        }
+
+        return user;
     }
 }

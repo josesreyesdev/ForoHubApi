@@ -34,4 +34,9 @@ public class UserInteractor implements IUser {
     public Page<User> findByActiveTrueWithProfiles(Pageable pagination) {
         return userRepositoryPort.findByActiveTrueWithProfiles(pagination);
     }
+
+    @Override
+    public User findByUserIdAndActiveTrue(String userId) {
+        return userRepositoryPort.findByUserIdAndActiveTrue(userId);
+    }
 }

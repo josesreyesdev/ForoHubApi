@@ -19,15 +19,20 @@ public class UserEntityMapper {
         );
     }
 
-    public static User toModel(UserEntity userEntity, List<Profile> profileModelList) {
+    public static User toModel(UserEntity userEntity) {
         return new User(
                 userEntity.getUserId(),
                 userEntity.getName(),
                 userEntity.getEmail(),
                 userEntity.getPassword(),
-                profileModelList,
+                getProfiles(userEntity.getProfiles()),
                 userEntity.getActive()
         );
     }
 
+    private static List<Profile> getProfiles(List<ProfileEntity> profilesEntity) {
+        return profilesEntity.stream()
+                .map(ProfileEntityMapper::toModel)
+                .toList();
+    }
 }

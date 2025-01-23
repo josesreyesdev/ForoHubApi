@@ -9,4 +9,6 @@ public interface IUser {
     User createUserWithProfiles(UserRequest userRequest);
 
     Page<User> findByActiveTrueWithProfiles(Pageable pagination);
+
+    User findByUserIdAndActiveTrue(String userId);
 }

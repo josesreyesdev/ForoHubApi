@@ -13,4 +13,6 @@ public interface UserRepositoryPort {
     List<Profile> validateAndFindProfiles(List<String> profileIds);
 
     Page<User> findByActiveTrueWithProfiles(Pageable pagination);
+
+    User findByUserIdAndActiveTrue(String userId);
 }
