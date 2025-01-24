@@ -15,7 +15,7 @@ public class CourseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "course_id")
+    @Column(name = "course_id", nullable = false, unique = true)
     private String courseId;
     private String name;
     @Enumerated(EnumType.STRING)

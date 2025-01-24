@@ -3,7 +3,7 @@ package com.jsrdev.ForoHub.infrastructure.database.mysql.adapter;
 import com.jsrdev.ForoHub.domain.model.Course;
 import com.jsrdev.ForoHub.domain.repository.CourseRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.CourseEntity;
-import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.CourseMapper;
+import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.CourseEntityMapper;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.CourseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,8 +26,8 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
     @Override
     public Course save(Course course) {
         CourseEntity courseEntity = courseJpaRepository
-                .save(CourseMapper.fromCourseToCourseEntity(course));
-        return CourseMapper.fromCourseEntityToCourse(courseEntity);
+                .save(CourseEntityMapper.toEntity(course));
+        return CourseEntityMapper.toModel(courseEntity);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
         List<Course> courses = courseEntityPage
                 .getContent()
                 .stream()
-                .map(CourseMapper::fromCourseEntityToCourse)
+                .map(CourseEntityMapper::toModel)
                 .toList();
 
         return new PageImpl<>(
@@ -51,24 +51,26 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
     @Override
     public Course findByCourseId(String courseId) {
         Optional<CourseEntity> courseEntity = courseJpaRepository.findByCourseId(courseId);
-        return courseEntity.map(CourseMapper::fromCourseEntityToCourse).orElse(null);
+        return courseEntity.map(CourseEntityMapper::toModel).orElse(null);
     }
 
     @Override
     public Course findByCourseIdAndActiveTrue(String courseId) {
         return courseJpaRepository.findByCourseIdAndActiveTrue(courseId)
-                .map(CourseMapper::fromCourseEntityToCourse).orElse(null);
+                .map(CourseEntityMapper::toModel).orElse(null);
     }
 
     @Override
     public Course update(Course update) {
-        Optional<CourseEntity> optionalCourse = courseJpaRepository.findByCourseId(update.getCourseId());
+        Optional<CourseEntity> optionalCourse = courseJpaRepository
+                .findByCourseId(update.getCourseId());
 
         if (optionalCourse.isEmpty()) { return null; }
 
         CourseEntity courseEntity = optionalCourse.get();
         courseEntity.update(update.getName(), update.getCategory());
-        return CourseMapper.fromCourseEntityToCourse(courseEntity);
+
+        return CourseEntityMapper.toModel(courseEntity);
     }
 
     @Override

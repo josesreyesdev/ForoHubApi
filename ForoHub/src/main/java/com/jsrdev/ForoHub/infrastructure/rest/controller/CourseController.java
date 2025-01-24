@@ -5,7 +5,7 @@ import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.course.UpdateCourse;
-import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerCourseMapper;
+import com.jsrdev.ForoHub.infrastructure.rest.mapper.CourseMapper;
 import com.jsrdev.ForoHub.usecase.course.CourseInteractor;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -42,10 +42,11 @@ public class CourseController {
             @Valid @RequestBody CourseRequest courseRequest,
             UriComponentsBuilder uriComponentsBuilder
     ) {
-        Course course = courseInteractor.save(new Course(courseRequest));
+        Course course = courseInteractor.save(courseRequest);
+
         URI uri = uriComponentsBuilder.path("/api/courses/{id}").buildAndExpand(course.getCourseId()).toUri();
 
-        return ResponseEntity.created(uri).body(ControllerCourseMapper.fromCourseToCourseResponse(course));
+        return ResponseEntity.created(uri).body(CourseMapper.toResponse(course));
     }
 
     @GetMapping
@@ -58,7 +59,7 @@ public class CourseController {
         List<CourseResponse> courseResponses = coursesPage
                 .getContent()
                 .stream()
-                .map(ControllerCourseMapper::fromCourseToCourseResponse)
+                .map(CourseMapper::toResponse)
                 .toList();
 
         Page<CourseResponse> courseResponsePage = new PageImpl<>(
@@ -74,7 +75,7 @@ public class CourseController {
     public ResponseEntity<CourseResponse> getCourse(@PathVariable String courseId) {
         Course course = findByCourseIdAndActive(courseId);
 
-        return ResponseEntity.ok(ControllerCourseMapper.fromCourseToCourseResponse(course));
+        return ResponseEntity.ok(CourseMapper.toResponse(course));
     }
 
     @PutMapping
@@ -82,8 +83,9 @@ public class CourseController {
     public ResponseEntity<CourseResponse> update(@Valid @RequestBody UpdateCourse update) {
         Course course = findByCourseIdAndActive(update.courseId());
 
-        Course updated = courseInteractor.update(course.update(course, update));
-        return ResponseEntity.ok(ControllerCourseMapper.fromCourseToCourseResponse(updated));
+        Course updated = courseInteractor.update(course, update);
+
+        return ResponseEntity.ok(CourseMapper.toResponse(updated));
     }
 
     @DeleteMapping("/{courseId}")
@@ -91,8 +93,7 @@ public class CourseController {
     public ResponseEntity<DeleteResponse> delete(@PathVariable String courseId) {
         Course course = findByCourseIdAndActive(courseId);
 
-        course.delete(course);
-        Boolean isDeleted = courseInteractor.delete(course.getCourseId());
+        Boolean isDeleted = courseInteractor.delete(course);
 
         String message = isDeleted ? "Course successfully deleted." : "Failed to delete course.";
         DeleteResponse response = new DeleteResponse(isDeleted, message);

@@ -2,6 +2,9 @@ package com.jsrdev.ForoHub.usecase.course;
 
 import com.jsrdev.ForoHub.domain.model.Course;
 import com.jsrdev.ForoHub.domain.repository.CourseRepositoryPort;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.UpdateCourse;
+import com.jsrdev.ForoHub.infrastructure.rest.mapper.CourseMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -17,7 +20,8 @@ public class CourseInteractor implements ICourse {
     }
 
     @Override
-    public Course save(Course course) {
+    public Course save(CourseRequest courseRequest) {
+        Course course = CourseMapper.toModel(courseRequest);
         return courseRepositoryPort.save(course);
     }
 
@@ -37,13 +41,14 @@ public class CourseInteractor implements ICourse {
     }
 
     @Override
-    public Course update(Course update) {
-        return courseRepositoryPort.update(update);
+    public Course update(Course course, UpdateCourse update) {
+        course.update(course, update.name(), update.category());
+        return courseRepositoryPort.update(course);
     }
 
     @Override
-    public Boolean delete(String courseId) {
-        return courseRepositoryPort.delete(courseId);
+    public Boolean delete(Course course) {
+        course.delete();
+        return courseRepositoryPort.delete(course.getCourseId());
     }
-
 }

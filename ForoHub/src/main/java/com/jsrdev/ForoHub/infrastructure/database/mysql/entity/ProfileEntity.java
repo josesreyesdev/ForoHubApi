@@ -8,8 +8,9 @@ public class ProfileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "profile_id")
+    @Column(name = "profile_id", nullable = false, unique = true)
     private String profileId;
+    @Column(nullable = false, unique = true)
     private String name;
     private Boolean active;
 
@@ -30,10 +31,6 @@ public class ProfileEntity {
 
     public Boolean getActive() {
         return active;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {

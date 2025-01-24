@@ -1,12 +1,14 @@
 package com.jsrdev.ForoHub.usecase.course;
 
 import com.jsrdev.ForoHub.domain.model.Course;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.CourseRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.course.UpdateCourse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ICourse {
 
-    Course save(Course course);
+    Course save(CourseRequest courseRequest);
 
     Page<Course> findByActiveTrue(Pageable pagination);
 
@@ -14,7 +16,7 @@ public interface ICourse {
 
     Course findByCourseIdAndActiveTrue(String courseId);
 
-    Course update(Course update);
+    Course update(Course course, UpdateCourse update);
 
-    Boolean delete(String id);
+    Boolean delete(Course course);
 }

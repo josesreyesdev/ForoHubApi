@@ -5,7 +5,7 @@ import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.ProfileResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.profile.UpdateProfile;
-import com.jsrdev.ForoHub.infrastructure.rest.mapper.ControllerProfileMapper;
+import com.jsrdev.ForoHub.infrastructure.rest.mapper.ProfileMapper;
 import com.jsrdev.ForoHub.usecase.profile.ProfileInteractor;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -41,12 +41,12 @@ public class ProfileController {
             @Valid @RequestBody ProfileRequest profileRequest,
             UriComponentsBuilder uriComponentsBuilder
     ) {
-        Profile profile = profileInteractor.create(new Profile(profileRequest));
+        Profile profile = profileInteractor.create(profileRequest);
         URI uri = uriComponentsBuilder.path("/api/profiles/{id}")
                 .buildAndExpand(profile.getProfileId()).toUri();
 
         return ResponseEntity.created(uri)
-                .body(ControllerProfileMapper.fromProfileToProfileResponse(profile));
+                .body(ProfileMapper.toResponse(profile));
     }
 
     @GetMapping
@@ -59,7 +59,7 @@ public class ProfileController {
         List<ProfileResponse> profileResponse = profilesPage
                 .getContent()
                 .stream()
-                .map(ControllerProfileMapper::fromProfileToProfileResponse)
+                .map(ProfileMapper::toResponse)
                 .toList();
 
         Page<ProfileResponse> profileResponsePage = new PageImpl<>(
@@ -75,7 +75,7 @@ public class ProfileController {
     public ResponseEntity<ProfileResponse> getProfile(@PathVariable String profileId) {
         Profile profile = findByProfileIdAndActive(profileId);
 
-        return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(profile));
+        return ResponseEntity.ok(ProfileMapper.toResponse(profile));
     }
 
     @PutMapping
@@ -83,8 +83,8 @@ public class ProfileController {
     public ResponseEntity<ProfileResponse> update(@Valid @RequestBody UpdateProfile update) {
         Profile profile = findByProfileIdAndActive(update.profileId());
 
-        Profile updated = profileInteractor.update(profile.update(profile, update));
-        return ResponseEntity.ok(ControllerProfileMapper.fromProfileToProfileResponse(updated));
+        Profile updated = profileInteractor.update(profile, update);
+        return ResponseEntity.ok(ProfileMapper.toResponse(updated));
     }
 
     @DeleteMapping("/{profileId}")
@@ -92,8 +92,7 @@ public class ProfileController {
     public ResponseEntity<DeleteResponse> delete(@PathVariable String profileId) {
         Profile profile = findByProfileIdAndActive(profileId);
 
-        profile.delete(profile);
-        Boolean isDeleted = profileInteractor.delete(profile.getProfileId());
+        Boolean isDeleted = profileInteractor.delete(profile);
 
         String message = isDeleted ? "Profile successfully deleted." : "Failed to delete profile.";
         DeleteResponse response = new DeleteResponse(isDeleted, message);
