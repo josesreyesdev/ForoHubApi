@@ -3,7 +3,6 @@ package com.jsrdev.ForoHub.usecase.user;
 import com.jsrdev.ForoHub.domain.model.User;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.user.UpdateRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.user.UserRequest;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
