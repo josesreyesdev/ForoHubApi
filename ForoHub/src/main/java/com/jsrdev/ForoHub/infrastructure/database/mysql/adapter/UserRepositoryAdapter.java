@@ -33,9 +33,20 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public User createUserWithProfiles(User user) {
+
+        List<ProfileEntity> profileEntities = profilesEntity(user.getProfiles());
+
+        UserEntity userEntity = UserEntityMapper.toEntity(user, profileEntities);
+
+        UserEntity savedUserEntity = userJpaRepository.save(userEntity);
+
+        return UserEntityMapper.toModel(savedUserEntity);
+    }
+
+    private List<ProfileEntity> profilesEntity(List<Profile> profiles) {
         List<String> invalidProfileIds = new ArrayList<>();
 
-        List<ProfileEntity> profileEntities = user.getProfiles().stream()
+        List<ProfileEntity> profileEntities = profiles.stream()
                 .map(profile -> profileJpaRepository.findByProfileId(profile.getProfileId())
                         .orElseGet(() -> {
                             invalidProfileIds.add(profile.getProfileId());
@@ -45,14 +56,9 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
                 .toList();
 
         if (!invalidProfileIds.isEmpty()) {
-            throw new ProfileNotFoundException("Profiles not found or inactive: " + String.join(", ", invalidProfileIds));
+            throw new ProfileNotFoundException("Profile(s) not found or inactive: " + String.join(", ", invalidProfileIds));
         }
-
-        UserEntity userEntity = UserEntityMapper.toEntity(user, profileEntities);
-
-        UserEntity savedUserEntity = userJpaRepository.save(userEntity);
-
-        return UserEntityMapper.toModel(savedUserEntity);
+        return profileEntities;
     }
 
     @Override
@@ -94,12 +100,29 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public User findByUserIdAndActiveTrue(String userId) {
-        Optional<UserEntity> optionalUserEntity = userJpaRepository
-                .findByUserIdAndActiveTrueWithProfiles(userId);
-        if (optionalUserEntity.isEmpty()) {
-            throw new ProfileNotFoundException("Profile not found or inactive");
-        }
+        UserEntity userEntity = findByUserIdAndActiveTrueWithProfiles(userId);
+        return UserEntityMapper.toModel(userEntity);
+    }
 
-        return UserEntityMapper.toModel(optionalUserEntity.get());
+    @Override
+    public User update(User updated) {
+        UserEntity userEntity = findByUserIdAndActiveTrueWithProfiles(updated.getUserId());
+        List<ProfileEntity> profilesId = profilesEntity(updated.getProfiles());
+
+        userEntity.update(
+                updated.getEmail(),
+                updated.getPassword(),
+                profilesId
+        );
+        return UserEntityMapper.toModel(userEntity);
+    }
+
+    private UserEntity findByUserIdAndActiveTrueWithProfiles(String profileId) {
+        Optional<UserEntity> optionalUserEntity = userJpaRepository
+                .findByUserIdAndActiveTrueWithProfiles(profileId);
+        if (optionalUserEntity.isEmpty()) {
+            throw new ProfileNotFoundException("User not found or inactive");
+        }
+        return optionalUserEntity.get();
     }
 }

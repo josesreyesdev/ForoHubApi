@@ -15,4 +15,6 @@ public interface UserRepositoryPort {
     Page<User> findByActiveTrueWithProfiles(Pageable pagination);
 
     User findByUserIdAndActiveTrue(String userId);
+
+    User update(User updated);
 }

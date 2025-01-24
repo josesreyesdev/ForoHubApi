@@ -1,8 +1,7 @@
 package com.jsrdev.ForoHub.infrastructure.rest.controller;
 
 import com.jsrdev.ForoHub.domain.model.User;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.user.UserRequest;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.user.UserResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.user.*;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.UserMapper;
 import com.jsrdev.ForoHub.usecase.user.UserInteractor;
 import jakarta.transaction.Transactional;
@@ -65,7 +64,6 @@ public class UserController {
                 pagination,
                 usersPage.getTotalElements()
         );
-
         return ResponseEntity.ok(assembler.toModel(userResponsePage));
     }
 
@@ -76,12 +74,20 @@ public class UserController {
         return ResponseEntity.ok(UserMapper.toResponse(user));
     }
 
+    @PutMapping()
+    @Transactional
+    public ResponseEntity<UserResponse> update(@Valid @RequestBody UpdateRequest update) {
+        User user = findByUserIdAndActiveTrue(update.userId());
+        User updated = userInteractor.update(user, update);
+
+        return ResponseEntity.ok(UserMapper.toResponse(updated));
+    }
+
     private User findByUserIdAndActiveTrue(String userId) {
         User user = userInteractor.findByUserIdAndActiveTrue(userId);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or inactive.");
         }
-
         return user;
     }
 }

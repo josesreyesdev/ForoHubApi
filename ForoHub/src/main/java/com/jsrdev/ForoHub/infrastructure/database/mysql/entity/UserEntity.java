@@ -63,4 +63,11 @@ public class UserEntity {
     public String getUserId() {
         return userId;
     }
+
+    public UserEntity update(String email, String password, List<ProfileEntity> profiles) {
+        this.email = email;
+        this.password = password;
+        this.profiles = profiles;
+        return this;
+    }
 }

@@ -57,4 +57,17 @@ public class User {
     private String passwordEncoder(String password) {
         return password; //new PasswordEncoder().encode(password);
     }
+
+    public User update(String email, String password, List<Profile> profiles) {
+        if (email != null) {
+            this.email = email;
+        }
+        if (password != null) {
+            this.password = password;
+        }
+        if (!profiles.isEmpty()) {
+            this.profiles = profiles;
+        }
+        return this;
+    }
 }
