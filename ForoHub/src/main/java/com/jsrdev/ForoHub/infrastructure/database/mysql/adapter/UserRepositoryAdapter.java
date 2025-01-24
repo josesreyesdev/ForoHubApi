@@ -121,7 +121,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         Optional<UserEntity> optionalUserEntity = userJpaRepository
                 .findByUserIdAndActiveTrueWithProfiles(profileId);
         if (optionalUserEntity.isEmpty()) {
-            throw new ProfileNotFoundException("User not found or inactive");
+            throw new ProfileNotFoundException("User not found or inactive: " + profileId);
         }
         return optionalUserEntity.get();
     }
