@@ -39,7 +39,7 @@ public class Profile {
         return this;
     }
 
-    public void delete(Profile profile) {
-        profile.active = false;
+    public void delete() {
+        this.active = false;
     }
 }

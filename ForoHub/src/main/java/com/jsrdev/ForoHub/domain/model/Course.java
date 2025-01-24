@@ -45,7 +45,7 @@ public class Course {
         return name;
     }
 
-    public void delete(Course course) {
-        course.active = false;
+    public void delete() {
+        this.active = false;
     }
 }

@@ -117,6 +117,12 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         return UserEntityMapper.toModel(userEntity);
     }
 
+    @Override
+    public Boolean delete(String userId) {
+        UserEntity userEntity = findByUserIdAndActiveTrueWithProfiles(userId);
+        return userEntity.delete();
+    }
+
     private UserEntity findByUserIdAndActiveTrueWithProfiles(String profileId) {
         Optional<UserEntity> optionalUserEntity = userJpaRepository
                 .findByUserIdAndActiveTrueWithProfiles(profileId);

@@ -42,7 +42,7 @@ public class ProfileInteractor implements IProfile {
 
     @Override
     public Boolean delete(Profile profile) {
-        profile.delete(profile);
+        profile.delete();
         return profileRepositoryPort.delete(profile.getProfileId());
     }
 }

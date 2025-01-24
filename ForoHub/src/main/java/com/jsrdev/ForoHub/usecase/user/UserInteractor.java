@@ -49,6 +49,12 @@ public class UserInteractor implements IUser {
         return userRepositoryPort.update(updated);
     }
 
+    @Override
+    public Boolean delete(User user) {
+        user.delete();
+        return userRepositoryPort.delete(user.getUserId());
+    }
+
     private List<Profile> validateAndFindProfiles(List<String> profiles) {
         Set<String> profilesSet = new LinkedHashSet<>(profiles);
         return userRepositoryPort.validateAndFindProfiles(profilesSet.stream().toList());

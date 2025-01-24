@@ -14,4 +14,6 @@ public interface IUser {
     User findByUserIdAndActiveTrue(String userId);
 
     User update(User user, UpdateRequest update);
+
+    Boolean delete(User user);
 }

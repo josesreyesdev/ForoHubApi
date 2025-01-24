@@ -70,4 +70,8 @@ public class User {
         }
         return this;
     }
+
+    public void delete() {
+        this.active = false;
+    }
 }

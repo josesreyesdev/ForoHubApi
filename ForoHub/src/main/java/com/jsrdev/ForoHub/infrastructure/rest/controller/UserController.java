@@ -1,6 +1,7 @@
 package com.jsrdev.ForoHub.infrastructure.rest.controller;
 
 import com.jsrdev.ForoHub.domain.model.User;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.user.*;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.UserMapper;
 import com.jsrdev.ForoHub.usecase.user.UserInteractor;
@@ -83,10 +84,23 @@ public class UserController {
         return ResponseEntity.ok(UserMapper.toResponse(updated));
     }
 
+    @DeleteMapping("/{userId}")
+    @Transactional
+    public ResponseEntity<DeleteResponse> delete(@PathVariable String userId) {
+        User user = findByUserIdAndActiveTrue(userId);
+
+        Boolean isDeleted = userInteractor.delete(user);
+
+        String message = isDeleted ? "Profile successfully deleted." : "Failed to delete profile.";
+        DeleteResponse response = new DeleteResponse(isDeleted, message);
+
+        return ResponseEntity.ok(response);
+    }
+
     private User findByUserIdAndActiveTrue(String userId) {
         User user = userInteractor.findByUserIdAndActiveTrue(userId);
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or inactive.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or inactive: " + userId);
         }
         return user;
     }

@@ -70,4 +70,9 @@ public class UserEntity {
         this.profiles = profiles;
         return this;
     }
+
+    public Boolean delete() {
+        this.active = false;
+        return true;
+    }
 }
