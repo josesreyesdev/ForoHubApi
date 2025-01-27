@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Table(name = "topics")
 @Entity(name = "Topic")
@@ -13,7 +14,7 @@ public class TopicEntity {
     private Long id;
 
     @Column(name = "topic_id", nullable = false, unique = true)
-    private String topicId;
+    private UUID topicId;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
@@ -22,7 +23,7 @@ public class TopicEntity {
     private LocalDateTime creationDate;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TopicStatus Status;
+    private TopicStatus status;
     @Column(nullable = false)
     private Boolean active;
 
