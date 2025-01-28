@@ -26,7 +26,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/profiles")
+@RequestMapping("/profiles")
 public class ProfileController {
 
     private final ProfileInteractor profileInteractor;

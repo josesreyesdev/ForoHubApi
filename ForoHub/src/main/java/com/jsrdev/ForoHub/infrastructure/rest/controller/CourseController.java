@@ -27,7 +27,7 @@ import java.util.List;
 
 //@RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/courses")
 public class CourseController {
 
     private final CourseInteractor courseInteractor;
