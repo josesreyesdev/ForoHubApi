@@ -5,16 +5,16 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Table(name = "topics")
 @Entity(name = "Topic")
 public class TopicEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "topic_id", nullable = false, unique = true)
-    private UUID topicId;
+    private String topicId;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
@@ -35,7 +35,69 @@ public class TopicEntity {
     @JoinColumn(name = "course_id", nullable = false)
     private CourseEntity course;
 
-    @Transient
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ReplyEntity> replies;
+
+    public TopicEntity() {
+    }
+
+    public TopicEntity(
+            Boolean active,
+            UserEntity author,
+            CourseEntity course,
+            LocalDateTime creationDate,
+            String message,
+            TopicStatus status,
+            String title,
+            String topicId
+    ) {
+        this.active = active;
+        this.author = author;
+        this.course = course;
+        this.creationDate = creationDate;
+        this.message = message;
+        this.status = status;
+        this.title = title;
+        this.topicId = topicId;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public UserEntity getAuthor() {
+        return author;
+    }
+
+    public CourseEntity getCourse() {
+        return course;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public List<ReplyEntity> getReplies() {
+        return replies;
+    }
+
+    public TopicStatus getStatus() {
+        return status;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getTopicId() {
+        return topicId;
+    }
 }

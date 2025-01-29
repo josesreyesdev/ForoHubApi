@@ -3,10 +3,9 @@ package com.jsrdev.ForoHub.domain.model;
 import com.jsrdev.ForoHub.common.TopicStatus;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class Topic {
-    private UUID topicId;
+    private String topicId;
     private String title;
     private String message;
     private LocalDateTime creationDate;
@@ -24,7 +23,7 @@ public class Topic {
             String message,
             TopicStatus status,
             String title,
-            UUID topicId
+            String topicId
     ) {
         this.active = active;
         this.author = author;
@@ -64,7 +63,7 @@ public class Topic {
         return title;
     }
 
-    public UUID getTopicId() {
+    public String getTopicId() {
         return topicId;
     }
 }

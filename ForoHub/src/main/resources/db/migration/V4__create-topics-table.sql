@@ -1,6 +1,6 @@
 CREATE TABLE topics (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    topic_id CHAR(36) NOT NULL UNIQUE,
+    topic_id VARCHAR(50) NOT NULL UNIQUE,
     title VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     creation_date DATETIME NOT NULL,

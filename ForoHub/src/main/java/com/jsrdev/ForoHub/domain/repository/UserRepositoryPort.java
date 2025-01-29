@@ -19,4 +19,6 @@ public interface UserRepositoryPort {
     User update(User updated);
 
     Boolean delete(String userId);
+
+    User findByUserId(String userId);
 }
