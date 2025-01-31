@@ -10,8 +10,12 @@ import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.CourseJpaRepo
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.TopicJpaRepository;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.UserJpaRepository;
 import com.jsrdev.ForoHub.infrastructure.exceptions.ValidationIntegrity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -46,5 +50,20 @@ public class TopicRepositoryAdapter implements TopicRepositoryPort {
         TopicEntity savedTopicEntity = topicJpaRepository
                 .save(TopicEntityMapper.toEntity(topic, userEntity.get(), courseEntity.get()));
         return TopicEntityMapper.toModel(savedTopicEntity);
+    }
+
+    @Override
+    public Page<Topic> findAllByActiveTrue(Pageable pagination) {
+        Page<TopicEntity> topicEntityPage = topicJpaRepository.findAllByActiveTrue(pagination);
+
+        List<Topic> topics = topicEntityPage.getContent().stream()
+                .map(TopicEntityMapper::toModel)
+                .toList();
+
+        return new PageImpl<>(
+                topics,
+                pagination,
+                topicEntityPage.getTotalElements()
+        );
     }
 }

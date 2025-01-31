@@ -9,6 +9,8 @@ import com.jsrdev.ForoHub.domain.repository.UserRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.topic.TopicRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.TopicMapper;
 import com.jsrdev.ForoHub.usecase.topic.validations.add.TopicValidator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -42,5 +44,10 @@ public class TopicInteractor implements ITopic {
         Topic topic = TopicMapper.toModel(topicRequest, user, course);
 
         return topicRepositoryPort.save(topic);
+    }
+
+    @Override
+    public Page<Topic> findAllByActiveTrue(Pageable pagination) {
+        return topicRepositoryPort.findAllByActiveTrue(pagination);
     }
 }
