@@ -7,6 +7,7 @@ import com.jsrdev.ForoHub.domain.repository.CourseRepositoryPort;
 import com.jsrdev.ForoHub.domain.repository.TopicRepositoryPort;
 import com.jsrdev.ForoHub.domain.repository.UserRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.topic.TopicRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.topic.UpdateTopic;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.TopicMapper;
 import com.jsrdev.ForoHub.usecase.topic.validations.add.TopicValidator;
 import org.springframework.data.domain.Page;
@@ -54,5 +55,18 @@ public class TopicInteractor implements ITopic {
     @Override
     public Topic findByTopicIdAndActiveTrue(String topicId) {
         return topicRepositoryPort.findByTopicIdAndActiveTrue(topicId);
+    }
+
+    @Override
+    public Topic update(Topic topic, UpdateTopic updateTopic) {
+        Course course = courseRepositoryPort
+                .findByCourseIdAndActiveTrue(updateTopic.courseId());
+        Topic updated = topic.update(
+                updateTopic.title(),
+                updateTopic.message(),
+                updateTopic.status(),
+                course
+        );
+        return topicRepositoryPort.update(updated);
     }
 }

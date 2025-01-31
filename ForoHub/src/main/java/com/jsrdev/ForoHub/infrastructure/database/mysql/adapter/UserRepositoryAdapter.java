@@ -129,7 +129,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         return userEntity.map(UserEntityMapper::toModel).orElse(null);
     }
 
-    private UserEntity findByUserIdAndActiveTrueWithProfiles(String profileId) {
+    public UserEntity findByUserIdAndActiveTrueWithProfiles(String profileId) {
         Optional<UserEntity> optionalUserEntity = userJpaRepository
                 .findByUserIdAndActiveTrueWithProfiles(profileId);
         if (optionalUserEntity.isEmpty()) {

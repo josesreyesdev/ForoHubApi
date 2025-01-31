@@ -5,6 +5,7 @@ import com.jsrdev.ForoHub.domain.repository.CourseRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.CourseEntity;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.CourseEntityMapper;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.CourseJpaRepository;
+import com.jsrdev.ForoHub.infrastructure.exceptions.ValidationIntegrity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -56,18 +57,14 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
 
     @Override
     public Course findByCourseIdAndActiveTrue(String courseId) {
-        return courseJpaRepository.findByCourseIdAndActiveTrue(courseId)
-                .map(CourseEntityMapper::toModel).orElse(null);
+        CourseEntity courseEntity = findByCourseIdAndActiveTrueEntity(courseId);
+
+        return CourseEntityMapper.toModel(courseEntity);
     }
 
     @Override
     public Course update(Course update) {
-        Optional<CourseEntity> optionalCourse = courseJpaRepository
-                .findByCourseId(update.getCourseId());
-
-        if (optionalCourse.isEmpty()) { return null; }
-
-        CourseEntity courseEntity = optionalCourse.get();
+        CourseEntity courseEntity = findByCourseIdAndActiveTrueEntity(update.getCourseId());
         courseEntity.update(update.getName(), update.getCategory());
 
         return CourseEntityMapper.toModel(courseEntity);
@@ -76,8 +73,19 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
     @Override
     public Boolean delete(String courseId) {
         Optional<CourseEntity> optionalCourse = courseJpaRepository.findByCourseId(courseId);
-        if (optionalCourse.isEmpty()) { return false; }
+        if (optionalCourse.isEmpty()) {
+            return false;
+        }
 
         return optionalCourse.get().delete();
+    }
+
+    public CourseEntity findByCourseIdAndActiveTrueEntity(String courseId) {
+        Optional<CourseEntity> optionalCourseEntity = courseJpaRepository
+                .findByCourseIdAndActiveTrue(courseId);
+        if (optionalCourseEntity.isEmpty()) {
+            throw new ValidationIntegrity("Course not found or inactive: " + courseId);
+        }
+        return optionalCourseEntity.get();
     }
 }

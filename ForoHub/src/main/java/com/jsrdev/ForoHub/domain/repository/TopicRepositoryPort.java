@@ -10,4 +10,6 @@ public interface TopicRepositoryPort {
     Page<Topic> findAllByActiveTrue(Pageable pagination);
 
     Topic findByTopicIdAndActiveTrue(String topicId);
+
+    Topic update(Topic updated);
 }

@@ -100,4 +100,13 @@ public class TopicEntity {
     public String getTopicId() {
         return topicId;
     }
+
+    public TopicEntity update(String title, String message, TopicStatus status, CourseEntity courseEntity) {
+        this.title = (title == null) ? this.title : title;
+        this.message = (message == null) ? this.message : message;
+        this.status = (status == null) ? this.status : status;
+        this.course = (courseEntity == null) ? this.course : courseEntity;
+
+        return this;
+    }
 }

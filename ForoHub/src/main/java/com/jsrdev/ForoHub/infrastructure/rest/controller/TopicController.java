@@ -3,6 +3,7 @@ package com.jsrdev.ForoHub.infrastructure.rest.controller;
 import com.jsrdev.ForoHub.domain.model.Topic;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.topic.TopicRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.topic.TopicResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.topic.UpdateTopic;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.TopicMapper;
 import com.jsrdev.ForoHub.usecase.topic.TopicInteractor;
 import jakarta.transaction.Transactional;
@@ -71,6 +72,21 @@ public class TopicController {
     public ResponseEntity<TopicResponse> getTopic(@PathVariable String id) {
         Topic topic = findByTopicIdAndActiveTrue(id);
         return ResponseEntity.ok(TopicMapper.toResponse(topic));
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<TopicResponse> update(
+            @PathVariable String id,
+            @Valid @RequestBody UpdateTopic updateTopic
+    ) {
+        Topic topic = findByTopicIdAndActiveTrue(id);
+        if (!topic.getAuthor().getUserId().equals(updateTopic.authorId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update this topic.");
+        }
+        Topic updated = topicInteractor.update(topic, updateTopic);
+
+        return ResponseEntity.ok(TopicMapper.toResponse(updated));
     }
 
     private Topic findByTopicIdAndActiveTrue(String topicId) {

@@ -66,4 +66,12 @@ public class Topic {
     public String getTopicId() {
         return topicId;
     }
+
+    public Topic update(String title, String message, TopicStatus status, Course course) {
+        this.title = (title != null) ? title : this.title;
+        this.message = (message != null) ? message : this.message;
+        this.status = (status != null) ? status : this.status;
+        this.course = (course != null) ? course : this.course;
+        return this;
+    }
 }

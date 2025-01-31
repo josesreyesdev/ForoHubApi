@@ -6,10 +6,7 @@ import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.CourseEntity;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.TopicEntity;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.UserEntity;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.TopicEntityMapper;
-import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.CourseJpaRepository;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.TopicJpaRepository;
-import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.UserJpaRepository;
-import com.jsrdev.ForoHub.infrastructure.exceptions.ProfileNotFoundException;
 import com.jsrdev.ForoHub.infrastructure.exceptions.ValidationIntegrity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,33 +20,29 @@ import java.util.Optional;
 public class TopicRepositoryAdapter implements TopicRepositoryPort {
 
     private final TopicJpaRepository topicJpaRepository;
-    private final UserJpaRepository userJpaRepository;
-    private final CourseJpaRepository courseJpaRepository;
+    private final UserRepositoryAdapter userRepositoryAdapter;
+    private final CourseRepositoryAdapter courseRepositoryAdapter;
 
     public TopicRepositoryAdapter(
-            CourseJpaRepository courseJpaRepository,
+            CourseRepositoryAdapter courseRepositoryAdapter,
             TopicJpaRepository topicJpaRepository,
-            UserJpaRepository userJpaRepository
+            UserRepositoryAdapter userRepositoryAdapter
     ) {
-        this.courseJpaRepository = courseJpaRepository;
         this.topicJpaRepository = topicJpaRepository;
-        this.userJpaRepository = userJpaRepository;
+        this.userRepositoryAdapter = userRepositoryAdapter;
+        this.courseRepositoryAdapter = courseRepositoryAdapter;
     }
 
     @Override
     public Topic save(Topic topic) {
-        Optional<CourseEntity> courseEntity = courseJpaRepository.findByCourseId(topic.getCourse().getCourseId());
-        if (courseEntity.isEmpty()) {
-            throw new ValidationIntegrity("Course not found or inactive: " + topic.getTopicId());
-        }
+        CourseEntity courseEntity = courseRepositoryAdapter
+                .findByCourseIdAndActiveTrueEntity(topic.getCourse().getCourseId());
 
-        Optional<UserEntity> userEntity = userJpaRepository.findByUserId(topic.getAuthor().getUserId());
-        if (userEntity.isEmpty()) {
-            throw new ValidationIntegrity("User not found or inactive: " + topic.getTopicId());
-        }
+        UserEntity userEntity = userRepositoryAdapter
+                .findByUserIdAndActiveTrueWithProfiles(topic.getAuthor().getUserId());
 
         TopicEntity savedTopicEntity = topicJpaRepository
-                .save(TopicEntityMapper.toEntity(topic, userEntity.get(), courseEntity.get()));
+                .save(TopicEntityMapper.toEntity(topic, userEntity, courseEntity));
         return TopicEntityMapper.toModel(savedTopicEntity);
     }
 
@@ -74,11 +67,28 @@ public class TopicRepositoryAdapter implements TopicRepositoryPort {
         return TopicEntityMapper.toModel(topicEntity);
     }
 
+    @Override
+    public Topic update(Topic topic) {
+        TopicEntity topicEntity = findByTopicIdAndActiveTrueEntity(topic.getTopicId());
+
+        CourseEntity courseEntity = courseRepositoryAdapter
+                .findByCourseIdAndActiveTrueEntity(topic.getCourse().getCourseId());
+
+        topicEntity.update(
+                topic.getTitle(),
+                topic.getMessage(),
+                topic.getStatus(),
+                courseEntity
+        );
+
+        return TopicEntityMapper.toModel(topicEntity);
+    }
+
     private TopicEntity findByTopicIdAndActiveTrueEntity(String topicId) {
         Optional<TopicEntity> optionalTopicEntity = topicJpaRepository
                 .findByTopicIdAndActiveTrue(topicId);
         if (optionalTopicEntity.isEmpty()) {
-            throw new ProfileNotFoundException("Topic not found or inactive: " + topicId);
+            throw new ValidationIntegrity("Topic not found or inactive: " + topicId);
         }
         return optionalTopicEntity.get();
     }
