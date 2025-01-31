@@ -50,4 +50,9 @@ public class TopicInteractor implements ITopic {
     public Page<Topic> findAllByActiveTrue(Pageable pagination) {
         return topicRepositoryPort.findAllByActiveTrue(pagination);
     }
+
+    @Override
+    public Topic findByTopicIdAndActiveTrue(String topicId) {
+        return topicRepositoryPort.findByTopicIdAndActiveTrue(topicId);
+    }
 }

@@ -32,8 +32,8 @@ public class TopicMapper {
                 topic.getMessage(),
                 topic.getCreationDate(),
                 topic.getStatus(),
-                topic.getAuthor().getUserId(),
-                topic.getCourse().getCourseId()
+                UserMapper.toResponse(topic.getAuthor()).userId(),
+                CourseMapper.toResponse(topic.getCourse()).courseId()
         );
     }
 }

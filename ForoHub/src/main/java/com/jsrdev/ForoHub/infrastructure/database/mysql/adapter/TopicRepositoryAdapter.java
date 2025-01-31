@@ -9,6 +9,7 @@ import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.TopicEntityMapper
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.CourseJpaRepository;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.TopicJpaRepository;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.UserJpaRepository;
+import com.jsrdev.ForoHub.infrastructure.exceptions.ProfileNotFoundException;
 import com.jsrdev.ForoHub.infrastructure.exceptions.ValidationIntegrity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -65,5 +66,20 @@ public class TopicRepositoryAdapter implements TopicRepositoryPort {
                 pagination,
                 topicEntityPage.getTotalElements()
         );
+    }
+
+    @Override
+    public Topic findByTopicIdAndActiveTrue(String topicId) {
+        TopicEntity topicEntity = findByTopicIdAndActiveTrueEntity(topicId);
+        return TopicEntityMapper.toModel(topicEntity);
+    }
+
+    private TopicEntity findByTopicIdAndActiveTrueEntity(String topicId) {
+        Optional<TopicEntity> optionalTopicEntity = topicJpaRepository
+                .findByTopicIdAndActiveTrue(topicId);
+        if (optionalTopicEntity.isEmpty()) {
+            throw new ProfileNotFoundException("Topic not found or inactive: " + topicId);
+        }
+        return optionalTopicEntity.get();
     }
 }

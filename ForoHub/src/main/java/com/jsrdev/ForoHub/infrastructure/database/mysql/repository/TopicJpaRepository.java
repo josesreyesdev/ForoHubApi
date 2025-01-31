@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface TopicJpaRepository extends JpaRepository<TopicEntity, Long> {
     /*@Query("""
             SELECT t FROM Topic t
@@ -16,4 +18,7 @@ public interface TopicJpaRepository extends JpaRepository<TopicEntity, Long> {
             """)*/
     @EntityGraph(attributePaths = {"author", "author.profiles", "course"})
     Page<TopicEntity> findAllByActiveTrue(Pageable pagination);
+
+    @EntityGraph(attributePaths = {"author", "author.profiles", "course"})
+    Optional<TopicEntity> findByTopicIdAndActiveTrue(String topicId);
 }

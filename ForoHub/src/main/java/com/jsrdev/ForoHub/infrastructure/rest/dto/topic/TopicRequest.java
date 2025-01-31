@@ -1,8 +1,6 @@
 package com.jsrdev.ForoHub.infrastructure.rest.dto.topic;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.jsrdev.ForoHub.common.TopicStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -14,9 +12,9 @@ public record TopicRequest(
         String title,
         @NotBlank(message = "Message is required")
         String message,
-        @NotNull(message = "Status is required")
+        /*@NotNull(message = "Status is required")
         @JsonDeserialize(using = TopicStatusDeserializer.class)
-        TopicStatus status,
+        TopicStatus status, */
         @JsonAlias({"authorId", "author_id"})
         @NotBlank(message = "AuthorId is required")
         String authorId,

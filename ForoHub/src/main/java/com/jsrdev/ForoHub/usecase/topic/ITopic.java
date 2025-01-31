@@ -9,4 +9,6 @@ public interface ITopic {
     Topic create(TopicRequest topicRequest);
 
     Page<Topic> findAllByActiveTrue(Pageable pagination);
+
+    Topic findByTopicIdAndActiveTrue(String topicId);
 }

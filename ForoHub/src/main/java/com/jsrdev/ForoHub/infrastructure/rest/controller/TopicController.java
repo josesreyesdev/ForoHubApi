@@ -14,8 +14,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -63,5 +65,19 @@ public class TopicController {
         );
 
         return ResponseEntity.ok(assembler.toModel(responsePage));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicResponse> getTopic(@PathVariable String id) {
+        Topic topic = findByTopicIdAndActiveTrue(id);
+        return ResponseEntity.ok(TopicMapper.toResponse(topic));
+    }
+
+    private Topic findByTopicIdAndActiveTrue(String topicId) {
+        Topic topic = topicInteractor.findByTopicIdAndActiveTrue(topicId);
+        if (topic == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topic not found or inactive: " + topicId);
+        }
+        return topic;
     }
 }

@@ -8,4 +8,6 @@ public interface TopicRepositoryPort {
     Topic save(Topic topic);
 
     Page<Topic> findAllByActiveTrue(Pageable pagination);
+
+    Topic findByTopicIdAndActiveTrue(String topicId);
 }
