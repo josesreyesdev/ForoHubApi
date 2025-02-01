@@ -84,6 +84,12 @@ public class TopicRepositoryAdapter implements TopicRepositoryPort {
         return TopicEntityMapper.toModel(topicEntity);
     }
 
+    @Override
+    public Topic delete(Topic topic) {
+        TopicEntity topicEntity = findByTopicIdAndActiveTrueEntity(topic.getTopicId());
+        return TopicEntityMapper.toModel(topicEntity.delete());
+    }
+
     private TopicEntity findByTopicIdAndActiveTrueEntity(String topicId) {
         Optional<TopicEntity> optionalTopicEntity = topicJpaRepository
                 .findByTopicIdAndActiveTrue(topicId);

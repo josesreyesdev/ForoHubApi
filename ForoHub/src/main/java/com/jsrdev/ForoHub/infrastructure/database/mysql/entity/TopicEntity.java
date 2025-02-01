@@ -109,4 +109,9 @@ public class TopicEntity {
 
         return this;
     }
+
+    public TopicEntity delete() {
+        this.active = false;
+        return this;
+    }
 }

@@ -14,4 +14,6 @@ public interface ITopic {
     Topic findByTopicIdAndActiveTrue(String topicId);
 
     Topic update(Topic topic, UpdateTopic updateTopic);
+
+    Topic delete(Topic topic);
 }

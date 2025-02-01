@@ -69,4 +69,10 @@ public class TopicInteractor implements ITopic {
         );
         return topicRepositoryPort.update(updated);
     }
+
+    @Override
+    public Topic delete(Topic topic) {
+        topic.delete();
+        return topicRepositoryPort.delete(topic);
+    }
 }

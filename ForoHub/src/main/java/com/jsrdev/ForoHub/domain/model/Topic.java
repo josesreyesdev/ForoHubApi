@@ -74,4 +74,9 @@ public class Topic {
         this.course = (course != null) ? course : this.course;
         return this;
     }
+
+    public Topic delete() {
+        this.active = false;
+        return this;
+    }
 }

@@ -1,6 +1,7 @@
 package com.jsrdev.ForoHub.infrastructure.rest.controller;
 
 import com.jsrdev.ForoHub.domain.model.Topic;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.DeleteResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.topic.TopicRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.topic.TopicResponse;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.topic.UpdateTopic;
@@ -87,6 +88,20 @@ public class TopicController {
         Topic updated = topicInteractor.update(topic, updateTopic);
 
         return ResponseEntity.ok(TopicMapper.toResponse(updated));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<DeleteResponse> delete(@PathVariable String id) {
+        Topic topic = findByTopicIdAndActiveTrue(id);
+
+        Topic deleted = topicInteractor.delete(topic);
+
+        boolean isDeleted = deleted != null;
+        String message = isDeleted ? "Topic successfully deleted." : "Failed to delete topic.";
+        DeleteResponse response = new DeleteResponse(isDeleted, message);
+
+        return ResponseEntity.ok(response);
     }
 
     private Topic findByTopicIdAndActiveTrue(String topicId) {

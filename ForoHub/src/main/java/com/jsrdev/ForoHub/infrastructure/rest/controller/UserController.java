@@ -91,7 +91,7 @@ public class UserController {
 
         Boolean isDeleted = userInteractor.delete(user);
 
-        String message = isDeleted ? "Profile successfully deleted." : "Failed to delete profile.";
+        String message = isDeleted ? "User successfully deleted." : "Failed to delete user.";
         DeleteResponse response = new DeleteResponse(isDeleted, message);
 
         return ResponseEntity.ok(response);
