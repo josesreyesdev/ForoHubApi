@@ -25,4 +25,6 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
             AND u.active = true
             """)
     Optional<UserEntity> findByUserIdAndActiveTrueWithProfiles(String userId);
+
+    Optional<UserEntity> findByUserId(String userId);
 }
