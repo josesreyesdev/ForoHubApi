@@ -8,6 +8,8 @@ import com.jsrdev.ForoHub.domain.repository.TopicRepositoryPort;
 import com.jsrdev.ForoHub.domain.repository.UserRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.reply.ReplyRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ReplyMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,5 +37,10 @@ public class ReplyInteractor implements IReply {
         Reply reply = ReplyMapper.toModel(replyRequest, user, topic);
 
         return replyRepositoryPort.save(reply);
+    }
+
+    @Override
+    public Page<Reply> findAllByActiveTrue(Pageable pagination) {
+        return replyRepositoryPort.findAllByActiveTrue(pagination);
     }
 }
