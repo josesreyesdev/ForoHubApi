@@ -14,4 +14,6 @@ public interface TopicRepositoryPort {
     Topic update(Topic updated);
 
     Topic delete(Topic topic);
+
+    Topic findByTopicId(String topicId);
 }

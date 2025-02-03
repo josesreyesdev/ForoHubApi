@@ -90,9 +90,24 @@ public class TopicRepositoryAdapter implements TopicRepositoryPort {
         return TopicEntityMapper.toModel(topicEntity.delete());
     }
 
+    @Override
+    public Topic findByTopicId(String topicId) {
+        TopicEntity topicEntity = findByTopicIdEntity(topicId);
+        return TopicEntityMapper.toModel(topicEntity);
+    }
+
     private TopicEntity findByTopicIdAndActiveTrueEntity(String topicId) {
         Optional<TopicEntity> optionalTopicEntity = topicJpaRepository
                 .findByTopicIdAndActiveTrue(topicId);
+        if (optionalTopicEntity.isEmpty()) {
+            throw new ValidationIntegrity("Topic not found or inactive: " + topicId);
+        }
+        return optionalTopicEntity.get();
+    }
+
+    public TopicEntity findByTopicIdEntity(String topicId) {
+        Optional<TopicEntity> optionalTopicEntity = topicJpaRepository
+                .findByTopicId(topicId);
         if (optionalTopicEntity.isEmpty()) {
             throw new ValidationIntegrity("Topic not found or inactive: " + topicId);
         }

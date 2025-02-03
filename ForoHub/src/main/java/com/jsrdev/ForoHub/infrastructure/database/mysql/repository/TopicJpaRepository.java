@@ -21,4 +21,7 @@ public interface TopicJpaRepository extends JpaRepository<TopicEntity, Long> {
 
     @EntityGraph(attributePaths = {"author", "author.profiles", "course"})
     Optional<TopicEntity> findByTopicIdAndActiveTrue(String topicId);
+
+    @EntityGraph(attributePaths = {"author", "author.profiles", "course"})
+    Optional<TopicEntity> findByTopicId(String topicId);
 }
