@@ -43,4 +43,9 @@ public class ReplyInteractor implements IReply {
     public Page<Reply> findAllByActiveTrue(Pageable pagination) {
         return replyRepositoryPort.findAllByActiveTrue(pagination);
     }
+
+    @Override
+    public Reply findByReplyIdAndActiveTrue(String replyId) {
+        return replyRepositoryPort.findByReplyIdAndActiveTrue(replyId);
+    }
 }

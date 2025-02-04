@@ -9,4 +9,6 @@ public interface IReply {
     Reply save(ReplyRequest replyRequest);
 
     Page<Reply> findAllByActiveTrue(Pageable pagination);
+
+    Reply findByReplyIdAndActiveTrue(String replyId);
 }

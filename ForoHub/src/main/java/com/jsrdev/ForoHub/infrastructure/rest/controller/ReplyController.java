@@ -14,8 +14,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -63,5 +65,19 @@ public class ReplyController {
         );
 
         return ResponseEntity.ok(assembler.toModel(responsePage));
+    }
+
+    @GetMapping("/{replyId}")
+    public ResponseEntity<ReplyResponse> getReply(@PathVariable String replyId) {
+        Reply reply = findByReplyIdAndActiveTrue(replyId);
+        return ResponseEntity.ok(ReplyMapper.toResponse(reply));
+    }
+
+    private Reply findByReplyIdAndActiveTrue(String replyId) {
+        Reply reply = replyInteractor.findByReplyIdAndActiveTrue(replyId);
+        if (reply == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply not found or inactive: " + replyId);
+        }
+        return reply;
     }
 }

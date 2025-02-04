@@ -8,4 +8,6 @@ public interface ReplyRepositoryPort {
     Reply save(Reply reply);
 
     Page<Reply> findAllByActiveTrue(Pageable pagination);
+
+    Reply findByReplyIdAndActiveTrue(String replyId);
 }

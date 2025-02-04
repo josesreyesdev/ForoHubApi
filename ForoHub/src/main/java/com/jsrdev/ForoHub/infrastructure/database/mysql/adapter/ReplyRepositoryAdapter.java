@@ -7,12 +7,14 @@ import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.TopicEntity;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.entity.UserEntity;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.mapper.ReplyEntityMapper;
 import com.jsrdev.ForoHub.infrastructure.database.mysql.repository.ReplyJpaRepository;
+import com.jsrdev.ForoHub.infrastructure.exceptions.ValidationIntegrity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ReplyRepositoryAdapter implements ReplyRepositoryPort {
@@ -56,5 +58,20 @@ public class ReplyRepositoryAdapter implements ReplyRepositoryPort {
                 pagination,
                 repliesPage.getTotalElements()
         );
+    }
+
+    @Override
+    public Reply findByReplyIdAndActiveTrue(String replyId) {
+        ReplyEntity replyEntity = findByReplyIdAndActiveTrueEntity(replyId);
+        return ReplyEntityMapper.toModel(replyEntity);
+    }
+
+    private ReplyEntity findByReplyIdAndActiveTrueEntity(String replyId) {
+        Optional<ReplyEntity> optionalReplyEntity = replyJpaRepository
+                .findByReplyIdAndActiveTrue(replyId);
+        if (optionalReplyEntity.isEmpty()) {
+            throw new ValidationIntegrity("Reply not found or inactive: " + replyId);
+        }
+        return optionalReplyEntity.get();
     }
 }
