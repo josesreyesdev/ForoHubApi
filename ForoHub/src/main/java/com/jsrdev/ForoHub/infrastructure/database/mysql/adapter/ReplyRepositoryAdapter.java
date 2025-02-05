@@ -66,6 +66,13 @@ public class ReplyRepositoryAdapter implements ReplyRepositoryPort {
         return ReplyEntityMapper.toModel(replyEntity);
     }
 
+    @Override
+    public Reply update(Reply reply) {
+        ReplyEntity replyEntity = findByReplyIdAndActiveTrueEntity(reply.getReplyId());
+        ReplyEntity updated = replyEntity.update(reply.getMessage(), reply.getSolution());
+        return ReplyEntityMapper.toModel(updated);
+    }
+
     private ReplyEntity findByReplyIdAndActiveTrueEntity(String replyId) {
         Optional<ReplyEntity> optionalReplyEntity = replyJpaRepository
                 .findByReplyIdAndActiveTrue(replyId);

@@ -74,4 +74,10 @@ public class ReplyEntity {
     public TopicEntity getTopic() {
         return topic;
     }
+
+    public ReplyEntity update(String message, Boolean solution) {
+        this.message = (message != null) ? message : this.message;
+        this.solution = (solution != null) ? solution : this.solution;
+        return this;
+    }
 }

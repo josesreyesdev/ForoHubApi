@@ -10,4 +10,6 @@ public interface ReplyRepositoryPort {
     Page<Reply> findAllByActiveTrue(Pageable pagination);
 
     Reply findByReplyIdAndActiveTrue(String replyId);
+
+    Reply update(Reply reply);
 }

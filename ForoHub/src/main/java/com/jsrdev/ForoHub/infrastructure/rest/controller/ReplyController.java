@@ -3,6 +3,7 @@ package com.jsrdev.ForoHub.infrastructure.rest.controller;
 import com.jsrdev.ForoHub.domain.model.Reply;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.reply.ReplyRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.reply.ReplyResponse;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.reply.UpdateReply;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ReplyMapper;
 import com.jsrdev.ForoHub.usecase.reply.ReplyInteractor;
 import jakarta.transaction.Transactional;
@@ -71,6 +72,14 @@ public class ReplyController {
     public ResponseEntity<ReplyResponse> getReply(@PathVariable String replyId) {
         Reply reply = findByReplyIdAndActiveTrue(replyId);
         return ResponseEntity.ok(ReplyMapper.toResponse(reply));
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity<ReplyResponse> update(@RequestBody UpdateReply updateRequest) {
+        Reply reply = findByReplyIdAndActiveTrue(updateRequest.replyId());
+        Reply updated = replyInteractor.update(reply, updateRequest);
+        return ResponseEntity.ok(ReplyMapper.toResponse(updated));
     }
 
     private Reply findByReplyIdAndActiveTrue(String replyId) {

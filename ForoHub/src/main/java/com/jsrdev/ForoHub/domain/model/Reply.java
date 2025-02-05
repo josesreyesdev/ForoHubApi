@@ -56,4 +56,10 @@ public class Reply {
     public Topic getTopic() {
         return topic;
     }
+
+    public Reply update(String message, Boolean solution) {
+        this.message = (message != null) ? message : this.message;
+        this.solution = (solution != null) ? solution : this.solution;
+        return this;
+    }
 }

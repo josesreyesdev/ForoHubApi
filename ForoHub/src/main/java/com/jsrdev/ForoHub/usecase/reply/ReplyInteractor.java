@@ -7,6 +7,7 @@ import com.jsrdev.ForoHub.domain.repository.ReplyRepositoryPort;
 import com.jsrdev.ForoHub.domain.repository.TopicRepositoryPort;
 import com.jsrdev.ForoHub.domain.repository.UserRepositoryPort;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.reply.ReplyRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.reply.UpdateReply;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.ReplyMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,5 +48,11 @@ public class ReplyInteractor implements IReply {
     @Override
     public Reply findByReplyIdAndActiveTrue(String replyId) {
         return replyRepositoryPort.findByReplyIdAndActiveTrue(replyId);
+    }
+
+    @Override
+    public Reply update(Reply reply, UpdateReply updateRequest) {
+        Reply updated = reply.update(updateRequest.message(), updateRequest.solution());
+        return replyRepositoryPort.update(updated);
     }
 }
