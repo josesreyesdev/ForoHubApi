@@ -80,4 +80,9 @@ public class ReplyEntity {
         this.solution = (solution != null) ? solution : this.solution;
         return this;
     }
+
+    public ReplyEntity delete() {
+        this.active = false;
+        return this;
+    }
 }

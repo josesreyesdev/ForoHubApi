@@ -62,4 +62,9 @@ public class Reply {
         this.solution = (solution != null) ? solution : this.solution;
         return this;
     }
+
+    public Reply delete() {
+        this.active = false;
+        return this;
+    }
 }

@@ -55,4 +55,9 @@ public class ReplyInteractor implements IReply {
         Reply updated = reply.update(updateRequest.message(), updateRequest.solution());
         return replyRepositoryPort.update(updated);
     }
+
+    @Override
+    public Reply delete(Reply reply) {
+        return replyRepositoryPort.delete(reply.delete());
+    }
 }

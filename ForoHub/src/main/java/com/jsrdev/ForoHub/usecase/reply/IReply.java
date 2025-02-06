@@ -14,4 +14,6 @@ public interface IReply {
     Reply findByReplyIdAndActiveTrue(String replyId);
 
     Reply update(Reply reply, UpdateReply updateRequest);
+
+    Reply delete(Reply reply);
 }

@@ -12,4 +12,6 @@ public interface ReplyRepositoryPort {
     Reply findByReplyIdAndActiveTrue(String replyId);
 
     Reply update(Reply reply);
+
+    Reply delete(Reply reply);
 }
