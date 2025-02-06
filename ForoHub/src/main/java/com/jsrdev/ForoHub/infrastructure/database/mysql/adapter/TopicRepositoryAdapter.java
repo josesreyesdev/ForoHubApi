@@ -98,4 +98,13 @@ public class TopicRepositoryAdapter implements TopicRepositoryPort {
         }
         return optionalTopicEntity.get();
     }
+
+    public TopicEntity findByTopicIdEntity(String topicId) {
+        Optional<TopicEntity> optionalTopicEntity = topicJpaRepository
+                .findByTopicId(topicId);
+        if (optionalTopicEntity.isEmpty()) {
+            throw new ValidationIntegrity("Topic not found or inactive: " + topicId);
+        }
+        return optionalTopicEntity.get();
+    }
 }

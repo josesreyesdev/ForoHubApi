@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
-public record UpdateRequest(
+public record UpdateUser(
         @JsonAlias({"userId", "user_id"})
         @NotBlank(message = "UserId is required")
         String userId,

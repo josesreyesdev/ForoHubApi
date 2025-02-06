@@ -77,7 +77,7 @@ public class UserController {
 
     @PutMapping()
     @Transactional
-    public ResponseEntity<UserResponse> update(@Valid @RequestBody UpdateRequest update) {
+    public ResponseEntity<UserResponse> update(@Valid @RequestBody UpdateUser update) {
         User user = findByUserIdAndActiveTrue(update.userId());
         User updated = userInteractor.update(user, update);
 

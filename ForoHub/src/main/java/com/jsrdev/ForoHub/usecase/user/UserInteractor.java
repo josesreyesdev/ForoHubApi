@@ -3,7 +3,7 @@ package com.jsrdev.ForoHub.usecase.user;
 import com.jsrdev.ForoHub.domain.model.Profile;
 import com.jsrdev.ForoHub.domain.model.User;
 import com.jsrdev.ForoHub.domain.repository.UserRepositoryPort;
-import com.jsrdev.ForoHub.infrastructure.rest.dto.user.UpdateRequest;
+import com.jsrdev.ForoHub.infrastructure.rest.dto.user.UpdateUser;
 import com.jsrdev.ForoHub.infrastructure.rest.dto.user.UserRequest;
 import com.jsrdev.ForoHub.infrastructure.rest.mapper.UserMapper;
 import org.springframework.data.domain.Page;
@@ -42,7 +42,7 @@ public class UserInteractor implements IUser {
     }
 
     @Override
-    public User update(User user, UpdateRequest update) {
+    public User update(User user, UpdateUser update) {
         List<Profile> profiles = validateAndFindProfiles(update.profiles());
         User updated = user.update(update.email(), update.password(), profiles);
 
